@@ -1,0 +1,39 @@
+---
+version: '2'
+
+services:
+
+  django:
+    restart: always
+    build:
+      context: ../
+    ports:
+      - "80:8080"
+    networks:
+      - frontend
+      - backend
+    volumes:
+      - static_collected:/opt/django/static_collected:rw
+    environment:
+      # Django
+      DJANGO_ENVIRONMENT:
+    depends_on:
+      - postgres
+
+  postgres:
+    restart: always
+    image: postgres:latest
+    expose:
+      - "5432"
+    networks:
+      - backend
+    volumes:
+      - database:/var/lib/postgresql/data:rw
+
+volumes:
+  database: {}
+  static_collected: {}
+
+networks:
+  frontend:
+  backend:

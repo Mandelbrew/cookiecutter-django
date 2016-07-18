@@ -1,0 +1,14 @@
+"/var/log/uwsgi/*.log" "/var/log/uwsgi/*/*.log" {
+  copytruncate
+  daily
+  rotate 5
+  compress
+  delaycompress
+  missingok
+  notifempty
+  postrotate
+    mkdir -p /var/log/uwsgi/rotated
+    cp /var/log/uwsgi/*.log.* /var/log/uwsgi/rotated
+  endscript
+}
+

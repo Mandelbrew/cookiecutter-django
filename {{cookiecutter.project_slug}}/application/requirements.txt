@@ -1,0 +1,15 @@
+Django<1.9
+django-markup
+django-storages
+django-honeypot
+django-overextends
+django-comments-xtd
+django-debug-toolbar
+django-widget-tweaks
+django-contrib-comments
+django-admin-bootstrapped
+django-admin-bootstrapped-plus
+boto
+psycopg2
+wagtail
+whitenoise

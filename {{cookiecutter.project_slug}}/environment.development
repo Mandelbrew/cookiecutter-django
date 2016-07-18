@@ -1,0 +1,31 @@
+# Project
+export PROJECT_NAME='{{ cookiecutter.project_name }}'
+export PROJECT_SLUG='{{ cookiecutter.project_slug }}'
+
+# PostgreSQL
+export POSTGRES_DB='{{ cookiecutter.db_name }}'
+export POSTGRES_USER='{{ cookiecutter.db_user }}'
+export POSTGRES_PASSWORD='{{ cookiecutter.db_password }}'
+
+# Django
+export DJANGO_DB_HOST='{{ cookiecutter.db_host }}'
+export DJANGO_DB_PORT='{{ cookiecutter.db_port }}'
+export DJANGO_DB_NAME='{{ cookiecutter.db_name }}'
+export DJANGO_DB_USER='{{ cookiecutter.db_user }}'
+export DJANGO_DB_PASSWORD='{{ cookiecutter.db_password }}'
+export DJANGO_EMAIL_HOST='{{ cookiecutter.email_host }}'
+export DJANGO_EMAIL_PORT='{{ cookiecutter.email_port }}'
+export DJANGO_EMAIL_USER='{{ cookiecutter.email_user }}'
+export DJANGO_EMAIL_PASSWORD='{{ cookiecutter.email_password }}'
+export DJANGO_DEFAULT_FROM_EMAIL='{{ cookiecutter.django_default_from_email }}'
+export DJANGO_SECRET_KEY='{{ cookiecutter.django_secret_key }}'
+export DJANGO_ALLOWED_HOSTS='{{ cookiecutter.domain_name }}'
+
+# AWS
+export AWS_ACCESS_KEY_ID=''
+export AWS_SECRET_ACCESS_KEY=''
+export AWS_STORAGE_BUCKET_NAME=''
+
+# uWSGI
+export UWSGI_NUM_PROCESSES='1'
+export UWSGI_NUM_THREADS='15'
