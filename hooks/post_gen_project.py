@@ -11,17 +11,15 @@ from __future__ import print_function
 import os
 import random
 import shutil
+
+import sys
 from cookiecutter.main import cookiecutter
 
-# Get the root project directory
+# Constants
 PROJECT_DIRECTORY = os.path.realpath(os.path.curdir)
-
-# Use the system PRNG if possible
-try:
-    random = random.SystemRandom()
-    using_sysrandom = True
-except NotImplementedError:
-    using_sysrandom = False
+USER_HOME = os.path.expanduser('~')
+USER_SECRETS = os.path.join(USER_HOME, '.secrets')
+PROJECT_SECRETS = os.path.join(USER_SECRETS, '{{ cookiecutter.project_slug }}')
 
 
 def get_random_string(
@@ -32,256 +30,89 @@ def get_random_string(
     The default length of 12 with the a-z, A-Z, 0-9 character set returns
     a 71-bit value. log_2((26+26+10)^12) =~ 71 bits
     """
-    if using_sysrandom:
-        return ''.join(random.choice(allowed_chars) for i in range(length))
-    print(
-        "Cookiecutter Django couldn't find a secure pseudo-random number generator on your system."
-        " Please change change your SECRET_KEY variables in conf/settings/local.py and env.example"
-        " manually."
-    )
-    return "CHANGEME!!"
+
+    return ''.join(random.SystemRandom().choice(allowed_chars) for i in range(length))
 
 
-def set_secret_key(setting_file_location):
-    # Open locals.py
-    with open(setting_file_location) as f:
-        file_ = f.read()
+def generate_secrets():
+    if os.path.exists(PROJECT_SECRETS):
+        print('ERROR: {0} already exists. Refusing to overwrite.'.format(PROJECT_SECRETS))
+        sys.exit(1)
+    else:
+        os.makedirs(PROJECT_SECRETS)
 
-    # Generate a SECRET_KEY that matches the Django standard
-    SECRET_KEY = get_random_string()
+    base_secrets = [
+        # Project
+        "PROJECT_NAME='{{ cookiecutter.project_name }}'",
+        "PROJECT_SLUG='{{ cookiecutter.project_slug }}'",
 
-    # Replace "CHANGEME!!!" with SECRET_KEY
-    file_ = file_.replace('CHANGEME!!!', SECRET_KEY, 1)
+        # PostgreSQL
+        "POSTGRES_DB='{{ cookiecutter.db_name }}'",
+        "POSTGRES_USER='{{ cookiecutter.db_user }}'",
 
-    # Write the results to the locals.py module
-    with open(setting_file_location, 'w') as f:
-        f.write(file_)
+        # Django
+        "DJANGO_DB_HOST='{{ cookiecutter.db_host }}'",
+        "DJANGO_DB_PORT='{{ cookiecutter.db_port }}'",
+        "DJANGO_DB_NAME='{{ cookiecutter.db_name }}'",
+        "DJANGO_DB_USER='{{ cookiecutter.db_user }}'",
+        "DJANGO_EMAIL_HOST='{{ cookiecutter.email_host }}'",
+        "DJANGO_EMAIL_PORT='{{ cookiecutter.email_port }}'",
+        "DJANGO_EMAIL_HOST_USER='{{ cookiecutter.email_user }}'",
+        "DJANGO_EMAIL_HOST_PASSWORD='{{ cookiecutter.email_password }}'",
+        "DJANGO_DEFAULT_FROM_EMAIL='{{ cookiecutter.django_default_from_email }}'",
+        "DJANGO_ALLOWED_HOSTS='{{ cookiecutter.django_allowed_hosts }}'",
 
+        # AWS
+        "AWS_ACCESS_KEY_ID='{{ cookiecutter.aws_access_key_id }}'",
+        "AWS_SECRET_ACCESS_KEY='{{ cookiecutter.aws_secret_access_key }}'",
+        "AWS_STORAGE_BUCKET_NAME='{{ cookiecutter.aws_storage_bucket_name }}'",
 
-def make_secret_key(project_directory):
-    """Generates and saves random secret key"""
-    # Determine the local_setting_file_location
-    local_setting = os.path.join(
-        project_directory,
-        'config/settings/local.py'
-    )
+        # uWSGI
+        "UWSGI_NUM_PROCESSES='1'",
+        "UWSGI_NUM_THREADS='15'",
+    ]
 
-    # local.py settings file
-    set_secret_key(local_setting)
+    db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
+    development = base_secrets + [
+        "DJANGO_ENVIRONMENT='docker_development'",
+        "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
+        "DJANGO_DB_PASSWORD='{0}'".format(db_password),
+        "POSTGRES_PASSWORD='{0}'".format(db_password),
+    ]
 
-    env_file = os.path.join(
-        project_directory,
-        'env.example'
-    )
+    # with open(os.path.join(PROJECT_SECRETS, 'development.env'), 'w') as f:
+    #     f.write("".join(["{0}\n".format(x) for x in development]))
 
-    # env.example file
-    set_secret_key(env_file)
+    with open(os.path.join(PROJECT_SECRETS, 'development.sh'), 'w') as f:
+        f.write("".join(["export {0}\n".format(x) for x in development]))
 
+    db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
+    staging = base_secrets + [
+        "DJANGO_ENVIRONMENT='docker_staging'",
+        "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
+        "DJANGO_DB_PASSWORD='{0}'".format(db_password),
+        "POSTGRES_PASSWORD='{0}'".format(db_password),
+    ]
 
-def remove_file(file_name):
-    if os.path.exists(file_name):
-        os.remove(file_name)
+    # with open(os.path.join(PROJECT_SECRETS, 'staging.env'), 'w') as f:
+    #     f.write("".join(["{0}\n".format(x) for x in staging]))
 
+    with open(os.path.join(PROJECT_SECRETS, 'staging.sh'), 'w') as f:
+        f.write("".join(["export {0}\n".format(x) for x in staging]))
 
-def remove_task_app(project_directory):
-    """Removes the taskapp if celery isn't going to be used"""
-    # Determine the local_setting_file_location
-    task_app_location = os.path.join(
-        PROJECT_DIRECTORY,
-        '{{ cookiecutter.project_slug }}/taskapp'
-    )
-    shutil.rmtree(task_app_location)
+    db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
+    production = base_secrets + [
+        "DJANGO_ENVIRONMENT='docker_production'",
+        "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
+        "DJANGO_DB_PASSWORD='{0}'".format(db_password),
+        "POSTGRES_PASSWORD='{0}'".format(db_password),
+    ]
 
+    # with open(os.path.join(PROJECT_SECRETS, 'production.env'), 'w') as f:
+    #     f.write("".join(["{0}\n".format(x) for x in production]))
 
-def remove_pycharm_dir(project_directory):
-    """
-    Removes directories related to PyCharm
-    if it isn't going to be used
-    """
-    idea_dir_location = os.path.join(PROJECT_DIRECTORY, '.idea/')
-    if os.path.exists(idea_dir_location):
-        shutil.rmtree(idea_dir_location)
-
-    docs_dir_location = os.path.join(PROJECT_DIRECTORY, 'docs/pycharm/')
-    if os.path.exists(docs_dir_location):
-        shutil.rmtree(docs_dir_location)
-
-
-def remove_heroku_files():
-    """
-    Removes files needed for heroku if it isn't going to be used
-    """
-    for filename in ["app.json", "Procfile", "requirements.txt", "runtime.txt"]:
-        file_name = os.path.join(PROJECT_DIRECTORY, filename)
-        remove_file(file_name)
-
-
-def remove_docker_files():
-    """
-    Removes files needed for docker if it isn't going to be used
-    """
-    for filename in ["dev.yml", "docker-compose.yml", ".dockerignore"]:
-        os.remove(os.path.join(
-            PROJECT_DIRECTORY, filename
-        ))
-
-    shutil.rmtree(os.path.join(
-        PROJECT_DIRECTORY, "compose"
-    ))
+    with open(os.path.join(PROJECT_SECRETS, 'production.sh'), 'w') as f:
+        f.write("".join(["export {0}\n".format(x) for x in production]))
 
 
-def remove_grunt_files():
-    """
-    Removes files needed for grunt if it isn't going to be used
-    """
-    for filename in ["Gruntfile.js"]:
-        os.remove(os.path.join(
-            PROJECT_DIRECTORY, filename
-        ))
-
-def remove_gulp_files():
-    """
-    Removes files needed for grunt if it isn't going to be used
-    """
-    for filename in ["gulpfile.js"]:
-        os.remove(os.path.join(
-            PROJECT_DIRECTORY, filename
-        ))
-
-def remove_packageJSON_file():
-    """
-    Removes files needed for grunt if it isn't going to be used
-    """
-    for filename in ["package.json"]:
-        os.remove(os.path.join(
-            PROJECT_DIRECTORY, filename
-        ))
-
-
-def add_webpack():
-    """
-    Adds webpack configuration using cookiecutter to install hzdg/cookiecutter-webpack
-    """
-    cookiecutter(
-        'https://github.com/hzdg/cookiecutter-webpack.git',
-        replay=False, overwrite_if_exists=True, output_dir='../',
-        checkout='pydanny-django', no_input=True, extra_context={
-            'project_name': '{{ cookiecutter.project_name }}',
-            'repo_name': '{{ cookiecutter.project_slug }}',
-            'repo_owner': '',
-            'project_dir': '{{ cookiecutter.project_slug }}',
-            'static_root': '{{ cookiecutter.project_slug }}/static/{{ cookiecutter.project_slug }}',
-            'production_output_path': '{{ cookiecutter.project_slug }}/static/{{ cookiecutter.project_slug }}/dist/',
-            'author_name': '{{ cookiecutter.author_name }}',
-            'description': '{{ cookiecutter.description }}',
-            'version': '{{ cookiecutter.version }}',
-            'existing_project': 'y',
-            'css_extension': 'sass',
-            'use_ejs': 'n',
-            'open_source_license': '{{ cookiecutter.open_source_license }}'
-        })
-
-def remove_certbot_files():
-    """
-    Removes files needed for certbot if it isn't going to be used
-    """
-    nginx_dir_location = os.path.join(PROJECT_DIRECTORY, 'compose/nginx')
-    for filename in ["nginx-secure.conf", "start.sh", "dhparams.example.pem"]:
-        file_name = os.path.join(nginx_dir_location, filename)
-        remove_file(file_name)
-
-def remove_copying_files():
-    """
-    Removes files needed for the GPLv3 licence if it isn't going to be used
-    """
-    for filename in ["COPYING"]:
-        os.remove(os.path.join(
-            PROJECT_DIRECTORY, filename
-        ))
-
-# IN PROGRESS
-# def copy_doc_files(project_directory):
-#     cookiecutters_dir = DEFAULT_CONFIG['cookiecutters_dir']
-#     cookiecutter_django_dir = os.path.join(
-#         cookiecutters_dir,
-#         'cookiecutter-django',
-#         'docs'
-#     )
-#     target_dir = os.path.join(
-#         project_directory,
-#         'docs'
-#     )
-#     for name in os.listdir(cookiecutter_django_dir):
-#         if name.endswith('.rst') and not name.startswith('index'):
-#             src = os.path.join(cookiecutter_django_dir, name)
-#             dst = os.path.join(target_dir, name)
-#             shutil.copyfile(src, dst)
-
-# 1. Generates and saves random secret key
-make_secret_key(PROJECT_DIRECTORY)
-
-# 2. Removes the taskapp if celery isn't going to be used
-if '{{ cookiecutter.use_celery }}'.lower() == 'n':
-    remove_task_app(PROJECT_DIRECTORY)
-
-# 3. Removes the .idea directory if PyCharm isn't going to be used
-if '{{ cookiecutter.use_pycharm }}'.lower() != 'y':
-    remove_pycharm_dir(PROJECT_DIRECTORY)
-
-# 4. Removes all heroku files if it isn't going to be used
-if '{{ cookiecutter.use_heroku }}'.lower() != 'y':
-    remove_heroku_files()
-
-# 5. Removes all docker files if it isn't going to be used
-if '{{ cookiecutter.use_docker }}'.lower() != 'y':
-    remove_docker_files()
-
-# 6. Removes all JS task manager files if it isn't going to be used
-if '{{ cookiecutter.js_task_runner}}'.lower() == 'gulp':
-    remove_grunt_files()
-elif '{{ cookiecutter.js_task_runner}}'.lower() == 'grunt':
-    remove_gulp_files()
-elif '{{ cookiecutter.js_task_runner }}'.lower() == 'webpack':
-    remove_gulp_files()
-    remove_grunt_files()
-    remove_packageJSON_file()
-    add_webpack()
-else:
-    remove_gulp_files()
-    remove_grunt_files()
-    remove_packageJSON_file()
-
-# 7. Removes all certbot/letsencrypt files if it isn't going to be used
-if '{{ cookiecutter.use_lets_encrypt }}'.lower() != 'y':
-    remove_certbot_files()
-
-# 8. Display a warning if use_docker and use_grunt are selected. Grunt isn't
-#   supported by our docker config atm.
-if '{{ cookiecutter.js_task_runner }}'.lower() in ['grunt', 'gulp'] and '{{ cookiecutter.use_docker }}'.lower() == 'y':
-    print(
-        "You selected to use docker and a JS task runner. This is NOT supported out of the box for now. You "
-        "can continue to use the project like you normally would, but you will need to add a "
-        "js task runner service to your docker configuration manually."
-    )
-
-# 9. Removes the certbot/letsencrypt files and display a warning if use_lets_encrypt is selected and use_docker isn't.
-if '{{ cookiecutter.use_lets_encrypt }}'.lower() == 'y' and '{{ cookiecutter.use_docker }}'.lower() != 'y':
-    remove_certbot_files()
-    print(
-        "You selected to use Let's Encrypt and didn't select to use docker. This is NOT supported out of the box for now. You "
-        "can continue to use the project like you normally would, but Let's Encrypt files have been included."
-    )
-
-# 10. Directs the user to the documentation if certbot and docker are selected.
-if '{{ cookiecutter.use_lets_encrypt }}'.lower() == 'y' and '{{ cookiecutter.use_docker }}'.lower() == 'y':
-    print(
-        "You selected to use Let's Encrypt, please see the documentation for instructions on how to use this in production. "
-        "You must generate a dhparams.pem file before running docker-compose in a production environment."
-    )
-
-# 11. Removes files needed for the GPLv3 licence if it isn't going to be used.
-if '{{ cookiecutter.open_source_license}}' != 'GPLv3':
-    remove_copying_files()
-
-# 4. Copy files from /docs/ to {{ cookiecutter.project_slug }}/docs/
-# copy_doc_files(PROJECT_DIRECTORY)
+generate_secrets()

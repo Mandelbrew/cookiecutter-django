@@ -1,0 +1,12 @@
+{
+  "name": "{{cookiecutter.project_slug}}-css",
+  "version": "0.1.0",
+  "description": "{{cookiecutter.project_slug}} sass app",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "autoprefixer": "^6.3.7",
+    "node-sass": "^3.8.0",
+    "postcss-cli": "^2.5.2"
+  }
+}

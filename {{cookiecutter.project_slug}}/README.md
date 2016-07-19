@@ -2,13 +2,7 @@
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
-### {{cookiecutter.description}} ###
-
-{% if cookiecutter.open_source_license != "Not open source" %}
-
-LICENSE: {{cookiecutter.open_source_license}}
-
-{% endif %}
+### {{cookiecutter.project_description}} ###
 
 ## Basic Commands ##
 
@@ -36,22 +30,6 @@ To run the tests, check your test coverage, and generate an HTML coverage report
 
 
     $ py.test
-{% if cookiecutter.js_task_runner == 'Webpack' %}
-
-### Running javascript tests with karma ###
-
-    $ npm test
-
-{% endif %}
 
 Deployment
 ----------
-
-{% if cookiecutter.use_docker == "y" %}
-
-Docker
-^^^^^^
-
-
-
-{% endif %}
