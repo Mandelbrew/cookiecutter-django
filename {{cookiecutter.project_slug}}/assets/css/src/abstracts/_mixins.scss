@@ -1,0 +1,29 @@
+// Copyright (c) 2016. Mandelbrew, LLC. - All Rights Reserved
+
+@mixin wobbly-keyframes($animation-name) {
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+
+@mixin wobbly-animated( $animation, $duration:false, $delay:false, $direction:false, $fill:false, $count:false, $state:false ) {
+  animation-name: $animation;
+  @if $duration {
+    animation-duration: $duration;
+  }
+  @if $delay {
+    animation-delay: $delay;
+  }
+  @if $direction {
+    animation-direction: $direction;
+  }
+  @if $fill {
+    animation-fill-mode: $fill;
+  }
+  @if $count {
+    animation-iteration-count: $count;
+  }
+  @if $state {
+    animation-play-state: $state;
+  }
+}

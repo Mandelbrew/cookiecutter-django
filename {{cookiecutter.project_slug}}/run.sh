@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-APP_NAME=$(basename $(pwd))
+APP_NAME={{ cookiecutter.project_slug }}
 APP_DIR=application
 APP_STATIC=${APP_DIR}/static
-APP_SECRETS=~/.secrets/${APP_NAME}/bash.export
+APP_SECRETS=~/.secrets/${APP_NAME}
 
 DOCKER=./.docker
 
@@ -12,7 +12,7 @@ function docker-cmd() {
     init)
         docker-machine create --driver virtualbox ${APP_NAME}
         eval $(docker-machine env ${APP_NAME})
-	    source ${APP_SECRETS}
+	    source ${APP_SECRETS}/${1}.sh
 	    docker-compose -p ${APP_NAME} -f ${DOCKER}/docker-compose.yml -f ${DOCKER}/docker-compose.${1}.yml up -d
 	    docker ps -a;
     ;;
@@ -24,19 +24,19 @@ function docker-cmd() {
     ;;
     clean)
         eval $(docker-machine env ${APP_NAME})
-	    source ${APP_SECRETS}
+	    source ${APP_SECRETS}/${1}.sh
 	    docker-compose -p ${APP_NAME} -f ${DOCKER}/docker-compose.yml -f ${DOCKER}/docker-compose.${1}.yml  down -v --remove-orphans
         docker rm $(docker ps -a -f 'status=exited' -q) 2> /dev/null || true
         docker rmi $(docker images -f 'dangling=true' -q) 2> /dev/null || true
     ;;
     attach)
         eval $(docker-machine env ${APP_NAME})
-	    source ${APP_SECRETS}
+	    source ${APP_SECRETS}/${1}.sh
         docker attach --sig-proxy=false $(docker ps --latest --quiet --filter "name=$(echo ${APP_NAME} | sed s/-//)")
     ;;
     *)
         eval $(docker-machine env ${APP_NAME})
-        source ${APP_SECRETS}
+        source ${APP_SECRETS}/${1}.sh
         docker-compose -p ${APP_NAME} -f ${DOCKER}/docker-compose.yml -f ${DOCKER}/docker-compose.${1}.yml ${@:2}
     ;;
     esac

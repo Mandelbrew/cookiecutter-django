@@ -12,7 +12,7 @@
 # Variables
 #
 
-APP_NAME := $(shell basename $(CURDIR))
+APP_NAME := {{ cookiecutter.project_slug }}
 APP_DIR := application
 APP_STATIC := $(APP_DIR)/static
 
@@ -33,8 +33,6 @@ IMG_TARGET := $(APP_STATIC)/img
 
 FONTS_SRC := $(ASSETS_FONTS)
 FONTS_TARGET := $(APP_STATIC)/fonts
-
-SECRETS := ~/.secrets/$(APP_NAME)/bash.export
 
 ##
 #
@@ -63,21 +61,7 @@ all: setup build
 #
 
 .PHONY: setup
-setup: setup-secrets setup-css setup-js
-
-.PHONY: setup-secrets
-setup-secrets: $(SECRETS)
-
-$(SECRETS):
-	@mkdir -p $(@D)
-	@chmod 700 $(@D)
-	@touch $@
-	@openssl rand -hex 32 > tmp_db_password
-	@openssl rand -hex 32 > tmp_django_secret
-	@echo "export POSTGRES_PASSWORD=$$(cat tmp_db_password)" >> $@
-	@echo "export DJANGO_DB_PASSWORD=$$(cat tmp_db_password)" >> $@
-	@echo "export DJANGO_SECRET_KEY=$$(cat tmp_django_secret)" >> $@
-	@rm tmp_db_password tmp_django_secret
+setup: setup-css setup-js
 
 .PHONY: setup-css
 setup-css:

@@ -1,0 +1,12 @@
+{
+  "name": "mandel-css",
+  "version": "0.0.1",
+  "description": "Mandelbrew sass app",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "autoprefixer": "^6.3.7",
+    "node-sass": "^3.8.0",
+    "postcss-cli": "^2.5.2"
+  }
+}
