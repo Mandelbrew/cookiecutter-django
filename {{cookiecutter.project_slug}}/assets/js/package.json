@@ -1,7 +1,7 @@
 {
-  "name": "mandel-js",
-  "version": "0.0.1",
-  "description": "Mandelbrew js app",
+  "name": "{{cookiecutter.project_slug}}-js",
+  "version": "0.1.0",
+  "description": "{{cookiecutter.project_slug}} js app",
   "private": true,
   "dependencies": {
   },

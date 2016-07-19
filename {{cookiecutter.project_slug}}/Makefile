@@ -12,8 +12,11 @@
 # Variables
 #
 
+APP_SLUG := {{cookiecutter.project_slug}}
 APP_DIR := application
 APP_STATIC := $(APP_DIR)/static
+APP_VENV := ~/.virtualenvs
+APP_REQ := $(APP_DIR)/requirements.txt
 
 ASSETS := assets
 ASSETS_CSS := $(ASSETS)/css
@@ -61,6 +64,12 @@ all: setup build
 
 .PHONY: setup
 setup: setup-css setup-js
+	@mkdir -p $(APP_VENV)/$(APP_SLUG)
+	@virtualenv -q $(APP_VENV)/$(APP_SLUG)
+	@source $(APP_VENV)/$(APP_SLUG)/bin/activate && \
+	pip install -q --upgrade pip setuptools && \
+	pip install -r $(APP_REQ)
+	@./run.sh development init
 
 .PHONY: setup-css
 setup-css:

@@ -49,20 +49,17 @@ def generate_secrets():
         # PostgreSQL
         "POSTGRES_DB='{{ cookiecutter.db_name }}'",
         "POSTGRES_USER='{{ cookiecutter.db_user }}'",
-        "POSTGRES_PASSWORD='{{ cookiecutter.db_password }}'",
 
         # Django
         "DJANGO_DB_HOST='{{ cookiecutter.db_host }}'",
         "DJANGO_DB_PORT='{{ cookiecutter.db_port }}'",
         "DJANGO_DB_NAME='{{ cookiecutter.db_name }}'",
         "DJANGO_DB_USER='{{ cookiecutter.db_user }}'",
-        "DJANGO_DB_PASSWORD='{{ cookiecutter.db_password }}'",  # TODO: generate a password for every env
         "DJANGO_EMAIL_HOST='{{ cookiecutter.email_host }}'",
         "DJANGO_EMAIL_PORT='{{ cookiecutter.email_port }}'",
         "DJANGO_EMAIL_USER='{{ cookiecutter.email_user }}'",
         "DJANGO_EMAIL_PASSWORD='{{ cookiecutter.email_password }}'",
         "DJANGO_DEFAULT_FROM_EMAIL='{{ cookiecutter.django_default_from_email }}'",
-        "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
         "DJANGO_ALLOWED_HOSTS='.{{ cookiecutter.django_allowed_hosts }}'",
 
         # AWS
@@ -75,8 +72,12 @@ def generate_secrets():
         "UWSGI_NUM_THREADS='15'",
     ]
 
+    db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
     development = base_secrets + [
         "DJANGO_ENVIRONMENT='docker_development'",
+        "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
+        "DJANGO_DB_PASSWORD='{0}'".format(db_password),
+        "POSTGRES_PASSWORD='{0}'".format(db_password),
     ]
 
     with open(os.path.join(PROJECT_SECRETS, 'development.env'), 'w') as f:
@@ -85,8 +86,12 @@ def generate_secrets():
     with open(os.path.join(PROJECT_SECRETS, 'development.sh'), 'w') as f:
         f.write("".join(["export {0}\n".format(x) for x in development]))
 
+    db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
     staging = base_secrets + [
         "DJANGO_ENVIRONMENT='docker_staging'",
+        "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
+        "DJANGO_DB_PASSWORD='{0}'".format(db_password),
+        "POSTGRES_PASSWORD='{0}'".format(db_password),
     ]
 
     with open(os.path.join(PROJECT_SECRETS, 'staging.env'), 'w') as f:
@@ -95,8 +100,12 @@ def generate_secrets():
     with open(os.path.join(PROJECT_SECRETS, 'staging.sh'), 'w') as f:
         f.write("".join(["export {0}\n".format(x) for x in staging]))
 
+    db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
     production = base_secrets + [
         "DJANGO_ENVIRONMENT='docker_production'",
+        "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
+        "DJANGO_DB_PASSWORD='{0}'".format(db_password),
+        "POSTGRES_PASSWORD='{0}'".format(db_password),
     ]
 
     with open(os.path.join(PROJECT_SECRETS, 'production.env'), 'w') as f:
