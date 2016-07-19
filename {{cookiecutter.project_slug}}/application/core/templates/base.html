@@ -26,8 +26,8 @@
     <!-- end master stylesheet -->
 
     {% block head_scripts %}
-        {% if not request.is_preview %}{% include 'core/includes/analytics.html' %}{% endif %}
-        {% include 'core/includes/typekit.html' %}
+        {# {% if not request.is_preview %}{% include 'core/includes/analytics.html' %}{% endif %} #}
+        {# {% include 'core/includes/typekit.html' %} #}
         {% include 'core/includes/shivs.html' %}
     {% endblock head_scripts %}
 </head>
@@ -62,4 +62,3 @@
 </body>
 
 </html>
-
