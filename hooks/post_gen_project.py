@@ -58,7 +58,7 @@ def generate_secrets():
         "DJANGO_EMAIL_PASSWORD='{{ cookiecutter.email_password }}'",
         "DJANGO_DEFAULT_FROM_EMAIL='{{ cookiecutter.django_default_from_email }}'",
         "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
-        "DJANGO_ALLOWED_HOSTS='{{ cookiecutter.domain_name }}'",
+        "DJANGO_ALLOWED_HOSTS='.{{ cookiecutter.django_allowed_hosts }}'",
 
         # AWS
         "AWS_ACCESS_KEY_ID='{{ cookiecutter.aws_access_key_id }}'",

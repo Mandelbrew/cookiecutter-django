@@ -12,7 +12,6 @@
 # Variables
 #
 
-APP_NAME := {{ cookiecutter.project_slug }}
 APP_DIR := application
 APP_STATIC := $(APP_DIR)/static
 
@@ -81,22 +80,34 @@ build: build-css build-js build-img build-fonts
 .PHONY: build-css
 build-css:
 	@$(MAKE) -C $(ASSETS_CSS) build
-	@rsync -a $(CSS_SRC)/ $(CSS_TARGET)/
+	@if [ -d "$(CSS_SRC)" ]; then \
+        mkdir -p $(CSS_TARGET); \
+        rsync -a $(CSS_SRC)/ $(CSS_TARGET)/; \
+	fi
 
 .PHONY: build-js
 build-js:
 	@$(MAKE) -C $(ASSETS_JS) build
-	@rsync -a $(JS_SRC)/ $(JS_TARGET)/
+	@if [ -d "$(JS_SRC)" ]; then \
+        mkdir -p $(JS_TARGET); \
+        rsync -a $(JS_SRC)/ $(JS_TARGET)/; \
+    fi
 
 .PHONY: build-img
 build-img:
 	@printf '\t%s\n' "syncing $(IMG_TARGET)..."
-	@rsync -a $(IMG_SRC)/ $(IMG_TARGET)/
+	@if [ -d "$(IMG_SRC)" ]; then \
+        mkdir -p $(IMG_TARGET); \
+        rsync -a $(IMG_SRC)/ $(IMG_TARGET)/; \
+    fi
 
 .PHONY: build-fonts
 build-fonts:
 	@printf '\t%s\n' "syncing $(FONTS_TARGET)..."
-	@rsync -a $(FONTS_SRC)/ $(FONTS_TARGET)/
+	@if [ -d "$(FONTS_SRC)" ]; then \
+        mkdir -p $(FONTS_TARGET); \
+        rsync -a $(FONTS_SRC)/ $(FONTS_TARGET)/; \
+	fi
 
 #
 # Clean
