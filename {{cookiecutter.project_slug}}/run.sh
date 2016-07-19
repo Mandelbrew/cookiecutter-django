@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-APP_NAME={{ cookiecutter.project_slug }}
+APP_NAME={{ cookiecutter.project_slug|replace('_','-') }}
 APP_DIR=application
 APP_STATIC=${APP_DIR}/static
 APP_SECRETS=~/.secrets/${APP_NAME}

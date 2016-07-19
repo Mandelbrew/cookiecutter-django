@@ -11,6 +11,8 @@ from __future__ import print_function
 import os
 import random
 import shutil
+
+import sys
 from cookiecutter.main import cookiecutter
 
 # Constants
@@ -33,7 +35,10 @@ def get_random_string(
 
 
 def generate_secrets():
-    if not os.path.exists(PROJECT_SECRETS):
+    if os.path.exists(PROJECT_SECRETS):
+        print('ERROR: {0} already exists. Refusing to overwrite.'.format(PROJECT_SECRETS))
+        sys.exit(1)
+    else:
         os.makedirs(PROJECT_SECRETS)
 
     base_secrets = [
@@ -51,7 +56,7 @@ def generate_secrets():
         "DJANGO_DB_PORT='{{ cookiecutter.db_port }}'",
         "DJANGO_DB_NAME='{{ cookiecutter.db_name }}'",
         "DJANGO_DB_USER='{{ cookiecutter.db_user }}'",
-        "DJANGO_DB_PASSWORD='{{ cookiecutter.db_password }}'", # TODO: generate a password for every env
+        "DJANGO_DB_PASSWORD='{{ cookiecutter.db_password }}'",  # TODO: generate a password for every env
         "DJANGO_EMAIL_HOST='{{ cookiecutter.email_host }}'",
         "DJANGO_EMAIL_PORT='{{ cookiecutter.email_port }}'",
         "DJANGO_EMAIL_USER='{{ cookiecutter.email_user }}'",
