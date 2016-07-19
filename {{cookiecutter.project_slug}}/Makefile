@@ -12,9 +12,11 @@
 # Variables
 #
 
-APP_NAME := $(shell basename $(CURDIR))
+APP_SLUG := {{cookiecutter.project_slug}}
 APP_DIR := application
 APP_STATIC := $(APP_DIR)/static
+APP_VENV := ~/.virtualenvs
+APP_REQ := $(APP_DIR)/requirements.txt
 
 ASSETS := assets
 ASSETS_CSS := $(ASSETS)/css
@@ -33,8 +35,6 @@ IMG_TARGET := $(APP_STATIC)/img
 
 FONTS_SRC := $(ASSETS_FONTS)
 FONTS_TARGET := $(APP_STATIC)/fonts
-
-SECRETS := ~/.secrets/$(APP_NAME)/bash.export
 
 ##
 #
@@ -63,21 +63,14 @@ all: setup build
 #
 
 .PHONY: setup
-setup: setup-secrets setup-css setup-js
-
-.PHONY: setup-secrets
-setup-secrets: $(SECRETS)
-
-$(SECRETS):
-	@mkdir -p $(@D)
-	@chmod 700 $(@D)
-	@touch $@
-	@openssl rand -hex 32 > tmp_db_password
-	@openssl rand -hex 32 > tmp_django_secret
-	@echo "export POSTGRES_PASSWORD=$$(cat tmp_db_password)" >> $@
-	@echo "export DJANGO_DB_PASSWORD=$$(cat tmp_db_password)" >> $@
-	@echo "export DJANGO_SECRET_KEY=$$(cat tmp_django_secret)" >> $@
-	@rm tmp_db_password tmp_django_secret
+setup: setup-css setup-js
+	@printf '\t%s\n' "pip magic..."
+	@mkdir -p $(APP_VENV)/$(APP_SLUG)
+	@virtualenv -q $(APP_VENV)/$(APP_SLUG)
+	@source $(APP_VENV)/$(APP_SLUG)/bin/activate && \
+	pip install -q --upgrade pip setuptools && \
+	pip install -r $(APP_REQ)
+	@./run.sh development init
 
 .PHONY: setup-css
 setup-css:
@@ -97,22 +90,34 @@ build: build-css build-js build-img build-fonts
 .PHONY: build-css
 build-css:
 	@$(MAKE) -C $(ASSETS_CSS) build
-	@rsync -a $(CSS_SRC)/ $(CSS_TARGET)/
+	@if [ -d "$(CSS_SRC)" ]; then \
+        mkdir -p $(CSS_TARGET); \
+        rsync -a $(CSS_SRC)/ $(CSS_TARGET)/; \
+	fi
 
 .PHONY: build-js
 build-js:
 	@$(MAKE) -C $(ASSETS_JS) build
-	@rsync -a $(JS_SRC)/ $(JS_TARGET)/
+	@if [ -d "$(JS_SRC)" ]; then \
+        mkdir -p $(JS_TARGET); \
+        rsync -a $(JS_SRC)/ $(JS_TARGET)/; \
+    fi
 
 .PHONY: build-img
 build-img:
 	@printf '\t%s\n' "syncing $(IMG_TARGET)..."
-	@rsync -a $(IMG_SRC)/ $(IMG_TARGET)/
+	@if [ -d "$(IMG_SRC)" ]; then \
+        mkdir -p $(IMG_TARGET); \
+        rsync -a $(IMG_SRC)/ $(IMG_TARGET)/; \
+    fi
 
 .PHONY: build-fonts
 build-fonts:
 	@printf '\t%s\n' "syncing $(FONTS_TARGET)..."
-	@rsync -a $(FONTS_SRC)/ $(FONTS_TARGET)/
+	@if [ -d "$(FONTS_SRC)" ]; then \
+        mkdir -p $(FONTS_TARGET); \
+        rsync -a $(FONTS_SRC)/ $(FONTS_TARGET)/; \
+	fi
 
 #
 # Clean

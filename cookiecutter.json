@@ -1,35 +1,25 @@
 {
-  "project_name": "Tasty Trombone",
-  "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_') }}",
-
-  "domain_name": "{{cookiecutter.project_slug}}.com",
-  "description": "A short description of {{cookiecutter.project_slug}}.",
-  "version": "0.1.0",
-  "author_name": "Smarty Mcpants",
-  "email": "smcpants@{{cookiecutter.project_slug}}.com",
-
-  "django_secret_key": "",
-  "django_allowed_hosts": "",
-  "django_default_from_email" : "",
-
-  "db_name": "{{cookiecutter.project_slug}}",
-  "db_user": "{{cookiecutter.project_slug}}",
-  "db_password": "",
-  "db_host" : "postgres",
-  "db_port" : "5432",
-
-  "aws_storage_bucket_name": "",
-  "aws_access_key_id": "",
-  "aws_secret_access_key": "",
-
-  "timezone": "UTC",
-  "use_whitenoise": "y",
-  "use_docker": "y",
-  "open_source_license": [
-    "MIT",
-    "BSD",
-    "GPLv3",
-    "Apache Software License 2.0",
-    "Not open source"
+  "project_name"             : "Tasty Trombone",
+  "project_slug"             : "{{cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_') }}",
+  "project_domain"           : "{{cookiecutter.project_slug}}.com",
+  "project_author"           : "Mandelbrew",
+  "project_email"            : "contact@mandelbrew.com",
+  "project_description"      : "A short description of {{cookiecutter.project_name}}.",
+  "django_allowed_hosts"     : ".{{cookiecutter.project_domain}}",
+  "django_default_from_email": "contact@{{cookiecutter.project_domain}}",
+  "email_host"               : "smtp.{{cookiecutter.project_domain}}",
+  "email_port"               : "587",
+  "email_host_user"          : "{{cookiecutter.project_slug}}_user",
+  "email_host_password"      : "{{cookiecutter.project_slug}}_password",
+  "db_name"                  : "{{cookiecutter.project_slug}}",
+  "db_user"                  : "{{cookiecutter.project_slug}}_user",
+  "db_host"                  : "postgres",
+  "db_port"                  : "5432",
+  "aws_access_key_id"        : "{{cookiecutter.project_slug|upper()}}_KEY_ID_EXAMPLE",
+  "aws_secret_access_key"    : "{{cookiecutter.project_slug|upper()}}_ACCESS_KEY",
+  "aws_storage_bucket_name"  : "{{cookiecutter.project_slug}}",
+  "timezone"                 : "UTC",
+  "_copy_without_render"     : [
+    "*.html"
   ]
 }

@@ -1,3 +1,4 @@
+
 project_slug = '{{ cookiecutter.project_slug }}'
 
 if hasattr(project_slug, 'isidentifier'):
