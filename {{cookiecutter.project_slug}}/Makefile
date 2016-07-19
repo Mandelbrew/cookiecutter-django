@@ -64,6 +64,7 @@ all: setup build
 
 .PHONY: setup
 setup: setup-css setup-js
+	@printf '\t%s\n' "pip magic..."
 	@mkdir -p $(APP_VENV)/$(APP_SLUG)
 	@virtualenv -q $(APP_VENV)/$(APP_SLUG)
 	@source $(APP_VENV)/$(APP_SLUG)/bin/activate && \

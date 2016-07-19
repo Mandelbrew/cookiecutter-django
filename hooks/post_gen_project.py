@@ -57,10 +57,10 @@ def generate_secrets():
         "DJANGO_DB_USER='{{ cookiecutter.db_user }}'",
         "DJANGO_EMAIL_HOST='{{ cookiecutter.email_host }}'",
         "DJANGO_EMAIL_PORT='{{ cookiecutter.email_port }}'",
-        "DJANGO_EMAIL_USER='{{ cookiecutter.email_user }}'",
-        "DJANGO_EMAIL_PASSWORD='{{ cookiecutter.email_password }}'",
+        "DJANGO_EMAIL_HOST_USER='{{ cookiecutter.email_user }}'",
+        "DJANGO_EMAIL_HOST_PASSWORD='{{ cookiecutter.email_password }}'",
         "DJANGO_DEFAULT_FROM_EMAIL='{{ cookiecutter.django_default_from_email }}'",
-        "DJANGO_ALLOWED_HOSTS='.{{ cookiecutter.django_allowed_hosts }}'",
+        "DJANGO_ALLOWED_HOSTS='{{ cookiecutter.django_allowed_hosts }}'",
 
         # AWS
         "AWS_ACCESS_KEY_ID='{{ cookiecutter.aws_access_key_id }}'",
@@ -80,8 +80,8 @@ def generate_secrets():
         "POSTGRES_PASSWORD='{0}'".format(db_password),
     ]
 
-    with open(os.path.join(PROJECT_SECRETS, 'development.env'), 'w') as f:
-        f.write("".join(["{0}\n".format(x) for x in development]))
+    # with open(os.path.join(PROJECT_SECRETS, 'development.env'), 'w') as f:
+    #     f.write("".join(["{0}\n".format(x) for x in development]))
 
     with open(os.path.join(PROJECT_SECRETS, 'development.sh'), 'w') as f:
         f.write("".join(["export {0}\n".format(x) for x in development]))
@@ -94,8 +94,8 @@ def generate_secrets():
         "POSTGRES_PASSWORD='{0}'".format(db_password),
     ]
 
-    with open(os.path.join(PROJECT_SECRETS, 'staging.env'), 'w') as f:
-        f.write("".join(["{0}\n".format(x) for x in staging]))
+    # with open(os.path.join(PROJECT_SECRETS, 'staging.env'), 'w') as f:
+    #     f.write("".join(["{0}\n".format(x) for x in staging]))
 
     with open(os.path.join(PROJECT_SECRETS, 'staging.sh'), 'w') as f:
         f.write("".join(["export {0}\n".format(x) for x in staging]))
@@ -108,8 +108,8 @@ def generate_secrets():
         "POSTGRES_PASSWORD='{0}'".format(db_password),
     ]
 
-    with open(os.path.join(PROJECT_SECRETS, 'production.env'), 'w') as f:
-        f.write("".join(["{0}\n".format(x) for x in production]))
+    # with open(os.path.join(PROJECT_SECRETS, 'production.env'), 'w') as f:
+    #     f.write("".join(["{0}\n".format(x) for x in production]))
 
     with open(os.path.join(PROJECT_SECRETS, 'production.sh'), 'w') as f:
         f.write("".join(["export {0}\n".format(x) for x in production]))

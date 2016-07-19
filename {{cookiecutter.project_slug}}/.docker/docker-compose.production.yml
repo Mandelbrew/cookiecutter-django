@@ -2,7 +2,3 @@
 version: '2'
 
 services:
-
-  django:
-    environment:
-      DJANGO_ENVIRONMENT: docker_production
