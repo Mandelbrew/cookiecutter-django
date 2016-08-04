@@ -30,7 +30,7 @@ SASS := $(NPM_BIN)/node-sass
 SASS_FLAGS :=  --precision 8 --output-style compressed --source-map true --source-map-contents
 
 POSTCSS := $(NPM_BIN)/postcss
-POSTCSS_FLAGS := --use autoprefixer --autoprefixer.browsers "> 5%"
+POSTCSS_FLAGS := --use autoprefixer --autoprefixer.browsers "> 5%, last 2 version"
 
 ##
 #
@@ -52,7 +52,7 @@ all: setup build
 
 .PHONY: setup
 setup:
-	@printf '\t%s\n' "npm magic..."
+	@printf '* %s\n' "npm setup..."
 	@$(NPM) install
 
 .PHONY: build
@@ -60,19 +60,19 @@ build: $(TARGET)
 
 .PHONY: clean
 clean:
-	@printf '\t%s\n' "removing $(BIN_DIR)..."
+	@printf '* %s\n' "removing $(BIN_DIR)..."
 	@rm -rf $(BIN_DIR)
 
 .PHONY: distclean
 distclean: clean
-	@printf '\t%s\n' "removing node_modules..."
+	@printf '* %s\n' "removing node_modules..."
 	@rm -rf node_modules
 
 $(TARGET): $(SRC) $(DEPS)
 	@mkdir -p $(@D)
-	@printf '\t%s\n' "sassifying $<..."
+	@printf '* %s\n' "sassifying $<..."
 	@$(SASS) $(SASS_FLAGS) --output $(BIN_DIR) $<
-	@printf '\t%s\n' "autoprefixing $@..."
+	@printf '* %s\n' "autoprefixing $@..."
 	@$(POSTCSS) $(POSTCSS_FLAGS) --map $(@:%=%.map) --output $@ $@
 
 ##

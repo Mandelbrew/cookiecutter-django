@@ -1,5 +1,6 @@
 FROM       python
 MAINTAINER Carlos Avila <cavila@mandelbrew.com>
+LABEL      app_name="{{ cookiecutter.project_slug|replace('_','-') }}"
 
 ENV        PYTHONUNBUFFERED       1
 ENV        DEBIAN_FRONTEND        noninteractive

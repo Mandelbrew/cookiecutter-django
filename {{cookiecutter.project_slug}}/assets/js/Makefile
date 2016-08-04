@@ -49,7 +49,7 @@ all: setup build
 
 .PHONY: setup
 setup:
-	@printf '\t%s\n' "npm magic..."
+	@printf '* %s\n' "npm setup..."
 	@$(NPM) install
 
 .PHONY: build
@@ -57,17 +57,17 @@ build: $(TARGET)
 
 .PHONY: clean
 clean:
-	@printf '\t%s\n' "removing $(BIN_DIR)..."
+	@printf '* %s\n' "removing $(BIN_DIR)..."
 	@rm -rf $(BIN_DIR)
 
 .PHONY: distclean
 distclean: clean
-	@printf '\t%s\n' "removing node_modules..."
+	@printf '* %s\n' "removing node_modules..."
 	@rm -rf node_modules
 
 $(TARGET): $(SRC) $(DEPS)
 	@mkdir -p $(@D)
-	@printf '\t%s\n' "webpack magic..."
+	@printf '* %s\n' "webpack magic..."
 	@$(WEBPACK) $(WEBPACK_FLAGS)
 
 ##
