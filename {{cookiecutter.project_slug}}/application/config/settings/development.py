@@ -1,4 +1,4 @@
-from .docker_base import *
+from .base import *
 
 DEBUG = True
 
@@ -29,6 +29,7 @@ INSTALLED_APPS = (
     'wagtail.wagtailsearch',
     'wagtail.wagtailadmin',
     'wagtail.wagtailcore',
+    'wagtail.contrib.settings',
     'wagtail.contrib.wagtailstyleguide',  # Development only!
 
     # Wagtail POST

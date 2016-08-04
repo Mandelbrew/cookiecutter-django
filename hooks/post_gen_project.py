@@ -74,7 +74,7 @@ def generate_secrets():
 
     db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
     development = base_secrets + [
-        "DJANGO_ENVIRONMENT='docker_development'",
+        "DJANGO_ENVIRONMENT='development'",
         "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
         "DJANGO_DB_PASSWORD='{0}'".format(db_password),
         "POSTGRES_PASSWORD='{0}'".format(db_password),
@@ -83,12 +83,12 @@ def generate_secrets():
     # with open(os.path.join(PROJECT_SECRETS, 'development.env'), 'w') as f:
     #     f.write("".join(["{0}\n".format(x) for x in development]))
 
-    with open(os.path.join(PROJECT_SECRETS, 'development.sh'), 'w') as f:
+    with open(os.path.join(PROJECT_SECRETS, 'development'), 'w') as f:
         f.write("".join(["export {0}\n".format(x) for x in development]))
 
     db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
     staging = base_secrets + [
-        "DJANGO_ENVIRONMENT='docker_staging'",
+        "DJANGO_ENVIRONMENT='staging'",
         "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
         "DJANGO_DB_PASSWORD='{0}'".format(db_password),
         "POSTGRES_PASSWORD='{0}'".format(db_password),
@@ -97,12 +97,12 @@ def generate_secrets():
     # with open(os.path.join(PROJECT_SECRETS, 'staging.env'), 'w') as f:
     #     f.write("".join(["{0}\n".format(x) for x in staging]))
 
-    with open(os.path.join(PROJECT_SECRETS, 'staging.sh'), 'w') as f:
+    with open(os.path.join(PROJECT_SECRETS, 'staging'), 'w') as f:
         f.write("".join(["export {0}\n".format(x) for x in staging]))
 
     db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
     production = base_secrets + [
-        "DJANGO_ENVIRONMENT='docker_production'",
+        "DJANGO_ENVIRONMENT='production'",
         "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
         "DJANGO_DB_PASSWORD='{0}'".format(db_password),
         "POSTGRES_PASSWORD='{0}'".format(db_password),
@@ -111,7 +111,7 @@ def generate_secrets():
     # with open(os.path.join(PROJECT_SECRETS, 'production.env'), 'w') as f:
     #     f.write("".join(["{0}\n".format(x) for x in production]))
 
-    with open(os.path.join(PROJECT_SECRETS, 'production.sh'), 'w') as f:
+    with open(os.path.join(PROJECT_SECRETS, 'production'), 'w') as f:
         f.write("".join(["export {0}\n".format(x) for x in production]))
 
 

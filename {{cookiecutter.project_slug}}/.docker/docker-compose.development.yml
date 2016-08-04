@@ -4,8 +4,8 @@ version: '2'
 services:
 
   django:
-    environment:
-      DJANGO_ENVIRONMENT: docker_development
+    ports:
+      - "8080"
     volumes:
       - ../application:/opt/django_development:rw
     working_dir: /opt/django_development
@@ -14,4 +14,4 @@ services:
 
   postgres:
     ports:
-      - "5432:5432"
+      - "{{ cookiecutter.db_port }}"
