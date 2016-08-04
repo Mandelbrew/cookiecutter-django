@@ -194,7 +194,7 @@ flycheck_*.el
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
-.idea/
+/.idea/
 *.iml
 
 ## File-based project format:
