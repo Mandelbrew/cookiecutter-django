@@ -1,8 +1,8 @@
 {
   "project_name"             : "Tasty Trombone",
   "project_slug"             : "{{cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_') }}",
-  "project_domain"           : "{{cookiecutter.project_slug}}.com",
-  "project_author"           : "{{cookiecutter.project_slug}} Team",
+  "project_domain"           : "{{cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-') }}.com",
+  "project_author"           : "{{cookiecutter.project_name}} Team",
   "project_email"            : "contact@{{cookiecutter.project_domain}}",
   "project_description"      : "A short description of {{cookiecutter.project_name}}.",
   "django_default_from_email": "contact@{{cookiecutter.project_domain}}",

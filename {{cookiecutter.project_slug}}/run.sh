@@ -29,11 +29,6 @@ function env-cmd() {
 		docker-machine create --driver virtualbox ${MACHINE}
         eval $(docker-machine env ${MACHINE})
 
-        printf '\n%s\n' "Starting..."
-	    docker-compose -p ${APP_NAME} \
-	    	-f ${DOCKER}/docker-compose.yml \
-	    	-f ${DOCKER}/docker-compose.${ENVIRONMENT}.yml \
-	    	up -d
 	    docker ps -a;
     ;;
     open)

@@ -19,7 +19,7 @@ from cookiecutter.main import cookiecutter
 PROJECT_DIRECTORY = os.path.realpath(os.path.curdir)
 USER_HOME = os.path.expanduser('~')
 USER_SECRETS = os.path.join(USER_HOME, '.secrets')
-PROJECT_SECRETS = os.path.join(USER_SECRETS, '{{ cookiecutter.project_slug }}')
+PROJECT_SECRETS = os.path.join(USER_SECRETS, '{{ cookiecutter.project_slug|replace("_","-") }}')
 
 
 def get_random_string(
