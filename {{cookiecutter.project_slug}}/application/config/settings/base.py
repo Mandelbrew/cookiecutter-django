@@ -42,6 +42,7 @@ INSTALLED_APPS = (
     'wagtail.wagtailsearch',
     'wagtail.wagtailadmin',
     'wagtail.wagtailcore',
+    'wagtail.contrib.settings',
 
     # Wagtail POST
     'modelcluster',
@@ -102,10 +103,13 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                # Django
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # Wagtail
+                'wagtail.contrib.settings.context_processors.settings',
             ],
         },
     },
@@ -154,11 +158,12 @@ AWS_QUERYSTRING_AUTH = False
 # endregion
 
 # region File Storage
+DEFAULT_FILE_STORAGE = 'config.s3_storages.MediaStorage'
 
-MEDIA_URL = '/{}/media/'.format(os.environ['PROJECT_SLUG'])
+MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATIC_URL = '/{}/static/'.format(os.environ['PROJECT_SLUG'])
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_collected')
 
 STATICFILES_DIRS = [

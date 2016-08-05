@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="SCSS" pattern="file:assets/css/src/*.scss&amp;&amp;!file:*/node_modules/*.*" />
+</component>

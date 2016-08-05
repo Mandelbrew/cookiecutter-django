@@ -64,20 +64,23 @@ all: setup build
 
 .PHONY: setup
 setup: setup-css setup-js
-	@printf '\t%s\n' "pip magic..."
+	@printf '* %s\n' "pip setup..."
 	@mkdir -p $(APP_VENV)/$(APP_SLUG)
 	@virtualenv -q $(APP_VENV)/$(APP_SLUG)
 	@source $(APP_VENV)/$(APP_SLUG)/bin/activate && \
 	pip install -q --upgrade pip setuptools && \
 	pip install -r $(APP_REQ)
-	@./run.sh development init
+	@printf '* %s\n' "docker setup..."
+	@./run.sh setup
 
 .PHONY: setup-css
 setup-css:
+	@printf '* %s\n' "css setup..."
 	@$(MAKE) -C $(ASSETS_CSS) setup
 
 .PHONY: setup-js
 setup-js:
+	@printf '* %s\n' "js setup..."
 	@$(MAKE) -C $(ASSETS_JS) setup
 
 #
@@ -85,10 +88,11 @@ setup-js:
 #
 
 .PHONY: build
-build: build-css build-js build-img build-fonts
+build: build-css build-js build-img build-fonts build-docker
 
 .PHONY: build-css
 build-css:
+	@printf '* %s\n' "css build..."
 	@$(MAKE) -C $(ASSETS_CSS) build
 	@if [ -d "$(CSS_SRC)" ]; then \
         mkdir -p $(CSS_TARGET); \
@@ -97,6 +101,7 @@ build-css:
 
 .PHONY: build-js
 build-js:
+	@printf '* %s\n' "js build..."
 	@$(MAKE) -C $(ASSETS_JS) build
 	@if [ -d "$(JS_SRC)" ]; then \
         mkdir -p $(JS_TARGET); \
@@ -105,7 +110,7 @@ build-js:
 
 .PHONY: build-img
 build-img:
-	@printf '\t%s\n' "syncing $(IMG_TARGET)..."
+	@printf '* %s\n' "syncing $(IMG_TARGET)..."
 	@if [ -d "$(IMG_SRC)" ]; then \
         mkdir -p $(IMG_TARGET); \
         rsync -a $(IMG_SRC)/ $(IMG_TARGET)/; \
@@ -113,69 +118,95 @@ build-img:
 
 .PHONY: build-fonts
 build-fonts:
-	@printf '\t%s\n' "syncing $(FONTS_TARGET)..."
+	@printf '* %s\n' "syncing $(FONTS_TARGET)..."
 	@if [ -d "$(FONTS_SRC)" ]; then \
         mkdir -p $(FONTS_TARGET); \
         rsync -a $(FONTS_SRC)/ $(FONTS_TARGET)/; \
 	fi
+
+.PHONY: build-docker
+build-docker:
+	@./run.sh build
 
 #
 # Clean
 #
 
 .PHONY: clean
-clean: clean-css clean-js clean-img clean-fonts
+clean: clean-css clean-js clean-img clean-fonts clean-docker
+	@printf '* %s\n' "removing python caches..."
+	@find . -name *.pyc -exec rm {} \;
+
 
 .PHONY: clean-css
 clean-css:
+	@printf '* %s\n' "css clean..."
 	@$(MAKE) -C $(ASSETS_CSS) clean
-	@printf '\t%s\n' "removing $(CSS_TARGET)..."
+	@printf '* %s\n' "removing $(CSS_TARGET)..."
 	@rm -rf $(CSS_TARGET)
 
 .PHONY: clean-js
 clean-js:
+	@printf '* %s\n' "js clean..."
 	@$(MAKE) -C $(ASSETS_JS) clean
-	@printf '\t%s\n' "removing $(JS_TARGET)..."
+	@printf '* %s\n' "removing $(JS_TARGET)..."
 	@rm -rf $(JS_TARGET)
 
 .PHONY: clean-img
 clean-img:
-	@printf '\t%s\n' "removing $(IMG_TARGET)..."
+	@printf '* %s\n' "img clean..."
+	@printf '* %s\n' "removing $(IMG_TARGET)..."
 	@rm -rf $(IMG_TARGET)
 
 .PHONY: clean-fonts
 clean-fonts:
-	@printf '\t%s\n' "removing $(FONTS_TARGET)..."
+	@printf '* %s\n' "fonts clean..."
+	@printf '* %s\n' "removing $(FONTS_TARGET)..."
 	@rm -rf $(FONTS_TARGET)
+
+.PHONY: clean-docker
+clean-docker:
+	@printf '* %s\n' "docker clean..."
+	@printf '* %s\n' "removing docker containers and images..."
+	@./run.sh clean
 
 #
 # Distclean
 #
 
 .PHONY: distclean
-distclean: distclean-css distclean-js distclean-img distclean-fonts
+distclean: distclean-css distclean-js distclean-img distclean-fonts distclean-docker
 
 .PHONY: distclean-css
 distclean-css:
+	@printf '* %s\n' "css distclean..."
 	@$(MAKE) -C $(ASSETS_CSS) distclean
-	@printf '\t%s\n' "removing $(CSS_TARGET)..."
+	@printf '* %s\n' "removing $(CSS_TARGET)..."
 	@rm -rf $(CSS_TARGET)
 
 .PHONY: distclean-js
 distclean-js:
+	@printf '* %s\n' "js distclean..."
 	@$(MAKE) -C $(ASSETS_JS) distclean
-	@printf '\t%s\n' "removing $(JS_TARGET)..."
+	@printf '* %s\n' "removing $(JS_TARGET)..."
 	@rm -rf $(JS_TARGET)
 
 .PHONY: distclean-img
 distclean-img:
-	@printf '\t%s\n' "removing $(IMG_TARGET)..."
+	@printf '* %s\n' "img distclean..."
+	@printf '* %s\n' "removing $(IMG_TARGET)..."
 	@rm -rf $(IMG_TARGET)
 
 .PHONY: distclean-fonts
 distclean-fonts:
-	@printf '\t%s\n' "removing $(FONTS_TARGET)..."
+	@printf '* %s\n' "fonts distclean..."
+	@printf '* %s\n' "removing $(FONTS_TARGET)..."
 	@rm -rf $(FONTS_TARGET)
+
+.PHONY: distclean-docker
+distclean-docker:
+	@printf '* %s\n' "docker distclean..."
+	@./run.sh distclean
 
 #
 # Misc

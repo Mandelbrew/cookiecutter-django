@@ -1,4 +1,4 @@
-from .docker_base import *
+from .base import *
 
 DEBUG = True
 
