@@ -1,12 +1,2 @@
 ---
 version: '2'
-
-services:
-
-  django:
-    ports:
-      - "8080"
-
-  postgres:
-    ports:
-      - "{{ cookiecutter.db_port }}"
