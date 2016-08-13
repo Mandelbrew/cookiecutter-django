@@ -1,0 +1,11 @@
+<ul class="footer__social">
+    {% for network in social_networks %}
+        <li>
+            <a class="link" href="{{ network.url }}">
+                <i class="footer__icon mb-icon mb-icon--{{ network.icon }}"></i>
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+<h1>{{ copy }}</h1>

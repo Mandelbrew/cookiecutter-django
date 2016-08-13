@@ -6,28 +6,27 @@
 <html lang="en">
 
 <head>
-    <!-- Begin Meta -->
-    {% block meta %}
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    {% endblock meta %}
-    <!-- End Meta -->
+    <!-- These 3 meta tags *must* come first in the head -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Any other head content must come *after* these tags -->
+    {% block head_meta %}
+    {% endblock head_meta %}
 
-    <title>
-        {% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}
-        {% block title_postfix %}{% endblock %}</title>
+    {% include 'core/includes/favicon.html' %}
+
+    <title>{% include 'core/includes/title.html' %}</title>
 
     <!-- master stylesheet -->
-    {% block css %}
+    {% block head_css %}
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    {% endblock css %}
+    {% endblock head_css %}
     <!-- end master stylesheet -->
 
     {% block head_scripts %}
-        {# {% if not request.is_preview %}{% include 'core/includes/analytics.html' %}{% endif %} #}
-        {# {% include 'core/includes/typekit.html' %} #}
+        {% if not request.is_preview %}{% include 'core/includes/analytics.html' %}{% endif %}
+        {% include 'core/includes/typekit.html' %}
         {% include 'core/includes/shivs.html' %}
     {% endblock head_scripts %}
 </head>

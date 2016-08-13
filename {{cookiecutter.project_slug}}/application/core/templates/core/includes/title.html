@@ -1,0 +1,10 @@
+{% spaceless %}
+    {% block title %}
+        {% if self.seo_title %}
+            {{ self.seo_title }}
+        {% else %}
+            {{ self.title }}
+        {% endif %}
+    {% endblock %}
+    {% block title_postfix %}{% endblock %}
+{% endspaceless %}
