@@ -64,7 +64,6 @@ def generate_secrets():
         # AWS
         "AWS_ACCESS_KEY_ID='{{ cookiecutter.aws_access_key_id }}'",
         "AWS_SECRET_ACCESS_KEY='{{ cookiecutter.aws_secret_access_key }}'",
-        "AWS_STORAGE_BUCKET_NAME='{{ cookiecutter.aws_storage_bucket_name }}'",
 
         # uWSGI
         "UWSGI_NUM_PROCESSES='1'",
@@ -73,10 +72,16 @@ def generate_secrets():
 
     db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
     development = base_secrets + [
+        # Django
         "DJANGO_ENVIRONMENT='development'",
         "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
         "DJANGO_DB_PASSWORD='{0}'".format(db_password),
+
+        #PostgreSQL
         "POSTGRES_PASSWORD='{0}'".format(db_password),
+
+        # AWS
+        "AWS_STORAGE_BUCKET_NAME='{{ cookiecutter.aws_storage_bucket_name }}-development'",
     ]
 
     # with open(os.path.join(PROJECT_SECRETS, 'development.env'), 'w') as f:
@@ -87,10 +92,16 @@ def generate_secrets():
 
     db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
     staging = base_secrets + [
+        # Django
         "DJANGO_ENVIRONMENT='staging'",
         "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
         "DJANGO_DB_PASSWORD='{0}'".format(db_password),
+
+        #PostgreSQL
         "POSTGRES_PASSWORD='{0}'".format(db_password),
+
+        # AWS
+        "AWS_STORAGE_BUCKET_NAME='{{ cookiecutter.aws_storage_bucket_name }}-staging'",
     ]
 
     # with open(os.path.join(PROJECT_SECRETS, 'staging.env'), 'w') as f:
@@ -101,10 +112,16 @@ def generate_secrets():
 
     db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
     production = base_secrets + [
+        # Django
         "DJANGO_ENVIRONMENT='production'",
         "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
         "DJANGO_DB_PASSWORD='{0}'".format(db_password),
+
+        #PostgreSQL
         "POSTGRES_PASSWORD='{0}'".format(db_password),
+
+        # AWS
+        "AWS_STORAGE_BUCKET_NAME='{{ cookiecutter.aws_storage_bucket_name }}-production'",
     ]
 
     # with open(os.path.join(PROJECT_SECRETS, 'production.env'), 'w') as f:

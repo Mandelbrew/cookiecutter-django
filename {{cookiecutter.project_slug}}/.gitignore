@@ -108,9 +108,14 @@ local.properties
 
 # Code Recommenders
 .recommenders/
-### VisualStudioCode template
-.vscode
-
+### NetBeans template
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+.nb-gradle/
 ### SublimeText template
 # cache files for sublime text
 *.tmlanguage.cache
@@ -139,20 +144,17 @@ bh_unicode_properties.cache
 # Sublime-github package stores a github token in this file
 # https://packagecontrol.io/packages/sublime-github
 GitHub.sublime-settings
-### NetBeans template
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-nbactions.xml
-.nb-gradle/
+
+### VisualStudioCode template
+.vscode
+
 ### JetBrains template
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
 .idea/workspace.xml
+.idea/modules.xml
 .idea/tasks.xml
 .idea/dictionaries
 .idea/vcs.xml
@@ -192,6 +194,7 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
 ### Emacs template
 # -*- mode: gitignore; -*-
 *~
@@ -234,26 +237,7 @@ flycheck_*.el
 /server/
 
 # projectiles files
-.projectile### Vim template
-# swap
-[._]*.s[a-w][a-z]
-[._]s[a-w][a-z]
-# session
-Session.vim
-# temporary
-.netrwhist
-*~
-# auto-generated tag files
-tags
-### MonoDevelop template
-#User Specific
-*.userprefs
-*.usertasks
-
-#Mono Project Files
-*.pidb
-*.resources
-test-results/
+.projectile
 
 ### Xcode template
 # Xcode
@@ -279,4 +263,24 @@ xcuserdata/
 *.moved-aside
 *.xccheckout
 *.xcscmblueprint
+### Vim template
+# swap
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+# session
+Session.vim
+# temporary
+.netrwhist
+*~
+# auto-generated tag files
+/tags
+### MonoDevelop template
+#User Specific
+*.userprefs
+*.usertasks
+
+#Mono Project Files
+*.pidb
+*.resources
+test-results/
 
