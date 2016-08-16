@@ -126,7 +126,7 @@ build-fonts:
 
 .PHONY: build-docker
 build-docker:
-	@./run.sh build
+	@docker build -t $(APP_SLUG) .
 
 #
 # Clean

@@ -3,7 +3,7 @@
 APP_NAME={{ cookiecutter.project_slug|replace('_','-') }}
 APP_DIR=application
 APP_STATIC=${APP_DIR}/static
-APP_SECRETS=~/.secrets/${APP_NAME}
+APP_SECRETS=~/.secrets/${APP_SLUG}
 
 DOCKER=./.docker
 MACHINE=default
@@ -39,13 +39,13 @@ function env-cmd() {
         eval $(docker-machine env ${MACHINE})
 
 		printf '\n%s\n' "Stopping..."
-	    docker-compose -p ${APP_NAME} \
+	    docker-compose -p ${APP_SLUG} \
 	        -f ${DOCKER}/docker-compose.yml \
 	        -f ${DOCKER}/docker-compose.${ENVIRONMENT}.yml  \
 	        down
 
 	    printf '\n%s\n' "Removing containers..."
-	    docker-compose -p ${APP_NAME} \
+	    docker-compose -p ${APP_SLUG} \
 	        -f ${DOCKER}/docker-compose.yml \
 	        -f ${DOCKER}/docker-compose.${ENVIRONMENT}.yml  \
 	        rm -a
@@ -58,13 +58,13 @@ function env-cmd() {
         eval $(docker-machine env ${MACHINE})
 
         printf '\n%s\n' "Stopping..."
-        docker-compose -p ${APP_NAME} \
+        docker-compose -p ${APP_SLUG} \
             -f ${DOCKER}/docker-compose.yml \
             -f ${DOCKER}/docker-compose.${ENVIRONMENT}.yml  \
             down -v
 
         printf '\n%s\n' "Removing containers and volumes..."
-	    docker-compose -p ${APP_NAME} \
+	    docker-compose -p ${APP_SLUG} \
 	        -f ${DOCKER}/docker-compose.yml \
 	        -f ${DOCKER}/docker-compose.${ENVIRONMENT}.yml  \
 	        rm -a -v
@@ -73,17 +73,17 @@ function env-cmd() {
         docker rmi $(docker images -f 'dangling=true' -q) 2> /dev/null || true
 
         printf '\n%s\n' "Removing app images..."
-        docker rmi $(docker images -f "label=app_name=${APP_NAME}" -q) 2> /dev/null || true
+        docker rmi $(docker images -f "label=app_name=${APP_SLUG}" -q) 2> /dev/null || true
     ;;
     attach)
 	    source ${APP_SECRETS}/${ENVIRONMENT}
         eval $(docker-machine env ${MACHINE})
-        docker attach --sig-proxy=false $(docker ps --latest --quiet --filter "name=$(echo ${APP_NAME} | sed s/-//)")
+        docker attach --sig-proxy=false $(docker ps --latest --quiet --filter "name=$(echo ${APP_SLUG} | sed s/-//)")
     ;;
     *)
         source ${APP_SECRETS}/${ENVIRONMENT}
         eval $(docker-machine env ${MACHINE})
-        docker-compose -p ${APP_NAME} \
+        docker-compose -p ${APP_SLUG} \
         	-f ${DOCKER}/docker-compose.yml \
         	-f ${DOCKER}/docker-compose.${ENVIRONMENT}.yml \
         	${@}

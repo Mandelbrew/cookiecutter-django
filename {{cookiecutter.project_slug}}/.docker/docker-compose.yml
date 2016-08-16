@@ -5,8 +5,7 @@ services:
 
   django:
     restart: always
-    build:
-      context: ../
+    image: {{ cookiecutter.project_slug }}
     ports:
       - "8080"
     networks:
