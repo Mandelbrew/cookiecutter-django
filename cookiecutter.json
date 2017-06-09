@@ -4,9 +4,9 @@
   "project_domain"      : "{{cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-') }}.com",
   "project_author"      : "{{cookiecutter.project_name}} Team",
   "project_email"       : "contact@{{cookiecutter.project_domain}}",
-  "project_description" : "A short description of {{cookiecutter.project_name}}.",
+  "project_description" : "Your elevator pitch for the awesomeness of {{cookiecutter.project_name}}.",
   "repository_type"     : "git",
-  "repository_url"      : "https://github.com/Mandelbrew/cookiecutter-django.git",
+  "repository_url"      : "https://github.com/{{cookiecutter.project_author|replace(' ', '_')|replace('-', '_')}}/{{cookiecutter.project_slug}}.git",
   "_copy_without_render": [
     "*.html"
   ]

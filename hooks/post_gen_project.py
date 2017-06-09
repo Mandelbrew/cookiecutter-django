@@ -78,9 +78,9 @@ def generate_secrets():
         # Django
         "DJANGO_SETTINGS_MODULE": "config.settings.default",
         "DJANGO_EMAIL_HOST_PASSWORD": get_random_string(64, string.ascii_letters + string.digits),
-        "DJANGO_SECRET_KEY": "={0}".get_random_string(),
+        "DJANGO_SECRET_KEY": get_random_string(),
         "DJANGO_HONEYPOT_FIELD_NAME": get_random_string(16, string.ascii_letters + string.digits),
-        "DJANGO_MEDIA_URL": "=/development/media/",
+        "DJANGO_MEDIA_URL": "/development/media/",
 
         # DB
         "DB_PASSWORD": get_random_string(64, string.ascii_letters + string.digits),
@@ -96,7 +96,7 @@ def generate_secrets():
         sys.exit(1)
     else:
         with open(dev_target, 'w') as f:
-            f.write("".join(["{0}={1}\n".format(x, dev_secrets[x]) for x in dev_secrets]))
+            f.write("".join(["{0}={1}\n".format(x, dev_secrets[x]) for x in sorted(dev_secrets)]))
 
 
 generate_secrets()

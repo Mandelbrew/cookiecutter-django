@@ -8,7 +8,6 @@
   },
   "keywords"       : [],
   "author"         : "{{cookiecutter.project_author}}",
-  "license"        : "{{cookiecutter.project_license}}",
   "devDependencies": {
     "animate-sass"                         : "^0.6.6",
     "autoprefixer"                         : "^6.7.7",
