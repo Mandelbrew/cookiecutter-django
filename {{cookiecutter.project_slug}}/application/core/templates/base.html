@@ -1,63 +1,94 @@
-{% load staticfiles %}
-{% load core_tags %}
-{% load wagtailuserbar %}
-
 <!DOCTYPE html>
-<html lang="en">
+{% load staticfiles %}
 
-<head>
+{% load wagtailuserbar %}
+{% load wagtailcore_tags %}
+{% load analytical %}
+{% load meta %}
+{% load i18n %}
+
+<html {% meta_namespaces_gplus %} class="no-js" lang="{{ LANGUAGE_CODE|default:"en" }}">
+
+<head {% meta_namespaces %} >
     <!-- These 3 meta tags *must* come first in the head -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Any other head content must come *after* these tags -->
+
+    <!-- analytical_head_top -->
+    {% analytical_head_top %}
+    <!-- /analytical_head_top -->
+
+    <!-- head_meta -->
     {% block head_meta %}
+        {% include 'meta/meta.html' %}
     {% endblock head_meta %}
+    <!-- /head_meta -->
 
+    <!-- favicon -->
     {% include 'core/includes/favicon.html' %}
+    <!-- /favicon -->
 
-    <title>{% include 'core/includes/title.html' %}</title>
-
-    <!-- master stylesheet -->
+    <!-- head_css -->
     {% block head_css %}
-        <link rel="stylesheet" href="{% static 'css/main.css' %}">
+        <link rel="stylesheet" href="{% static 'stylesheet.css' %}">
     {% endblock head_css %}
-    <!-- end master stylesheet -->
+    <!-- /head_css  -->
 
-    {% block head_scripts %}
-        {% if not request.is_preview %}{% include 'core/includes/analytics.html' %}{% endif %}
+    <!-- head_js -->
+    {% block head_js %}
         {% include 'core/includes/typekit.html' %}
         {% include 'core/includes/shivs.html' %}
-    {% endblock head_scripts %}
+    {% endblock head_js %}
+    <!-- /head_js -->
+
+    <!-- analytical_head_bottom -->
+    {% analytical_head_bottom %}
+    <!-- /analytical_head_bottom -->
+
+    <!-- google_fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Dosis:200,300,400|Shadows+Into+Light+Two" rel="stylesheet">
+    <!-- /google_fonts -->
+
+
+
 </head>
 
-<body>
+<body class="{% block body_class %}{% endblock %}">
+<!-- analytical_body_top -->
+{% analytical_body_top %}
+<!-- /analytical_body_top -->
 
-<!-- Begin Navigation -->
-{% block navigation %}{% endblock navigation %}
-<!-- End Navigation -->
+<!-- header -->
+{% block header %}{% include 'core/header.html' %}{% endblock header %}
+<!-- /header -->
 
-<!-- Begin Content -->
-{% block content %}{% endblock content %}
-<!-- End Content -->
+<!-- content -->
+<main role="main">
+    {% block content %}{% endblock content %}
+</main>
+<!-- /content -->
 
-<!-- Begin Footer -->
-{% block footer %}{% endblock footer %}
-<!-- End Footer -->
+<!-- footer -->
+{% block footer %}{% include 'core/footer.html' %}{% endblock footer %}
+<!-- /footer -->
 
-<!-- Being Wagtail -->
+<!-- wagtail -->
 {% block wagtail %}
     {% wagtailuserbar 'bottom-left' %}
 {% endblock %}
-<!-- End Wagtail -->
+<!-- /wagtail -->
 
-<!-- Begin Javascript -->
-{% block javascript %}
-    <!-- main script -->
-    <script src="{% static 'js/main.js' %}"></script>
-{% endblock javascript %}
-<!-- End Javascript -->
+<!-- body_js -->
+{% block body_js %}
+    <script async src="{% static 'application.js' %}"></script>
+{% endblock body_js %}
+<!-- /body_js -->
 
+<!-- analytical_body_bottom -->
+{% analytical_body_bottom %}
+<!-- /analytical_body_bottom -->
 </body>
 
 </html>

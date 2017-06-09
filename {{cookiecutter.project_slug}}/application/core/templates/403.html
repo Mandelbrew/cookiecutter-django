@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load svg %}
+
+{% block title %}Server Error{% endblock %}
+
+{% block header %}{% endblock header %}
+
+{% block content %}
+
+<div class="container pt-150px pb-30px bg-gray-lightest">
+    <div class="row justify-content-center mb-65px">
+        <div class="col-8 col-sm-4 col-md-3">
+            {% svg 'img/403.svg' %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h1><strong>Oops! :(</strong></h1>
+            <h3>Looks like something went wrong...</h3>
+            <p class="text-center">We track these errors automatically, but if the problem persists feel free to contact us.<br>In the meantime, try
+                refreshing!</p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

@@ -1,24 +1,13 @@
 {
-  "project_name"             : "Tasty Trombone",
-  "project_slug"             : "{{cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_') }}",
-  "project_domain"           : "{{cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-') }}.com",
-  "project_author"           : "{{cookiecutter.project_name}} Team",
-  "project_email"            : "contact@{{cookiecutter.project_domain}}",
-  "project_description"      : "A short description of {{cookiecutter.project_name}}.",
-  "django_default_from_email": "contact@{{cookiecutter.project_domain}}",
-  "email_host"               : "smtp.{{cookiecutter.project_domain}}",
-  "email_port"               : "587",
-  "email_host_user"          : "{{cookiecutter.project_slug}}",
-  "email_host_password"      : "{{cookiecutter.project_slug|upper()}}_PASSWORD",
-  "db_name"                  : "{{cookiecutter.project_slug}}",
-  "db_user"                  : "{{cookiecutter.project_slug}}",
-  "db_host"                  : "postgres",
-  "db_port"                  : "5432",
-  "aws_access_key_id"        : "{{cookiecutter.project_slug|upper()}}_KEY_ID_EXAMPLE",
-  "aws_secret_access_key"    : "{{cookiecutter.project_slug|upper()}}_ACCESS_KEY",
-  "aws_storage_bucket_name"  : "{{cookiecutter.project_slug}}",
-  "timezone"                 : "UTC",
-  "_copy_without_render"     : [
+  "project_name"        : "Tasty Trombone",
+  "project_slug"        : "{{cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_') }}",
+  "project_domain"      : "{{cookiecutter.project_slug.lower()|replace(' ', '-')|replace('_', '-') }}.com",
+  "project_author"      : "{{cookiecutter.project_name}} Team",
+  "project_email"       : "contact@{{cookiecutter.project_domain}}",
+  "project_description" : "A short description of {{cookiecutter.project_name}}.",
+  "repository_type"     : "git",
+  "repository_url"      : "https://github.com/Mandelbrew/cookiecutter-django.git",
+  "_copy_without_render": [
     "*.html"
   ]
 }

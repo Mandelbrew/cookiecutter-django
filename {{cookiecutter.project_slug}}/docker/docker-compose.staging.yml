@@ -1,0 +1,66 @@
+---
+version: '3'
+
+services:
+
+  postgres:
+    restart: always
+    image: postgres:9.6
+    ports:
+      - "5432"
+    expose:
+      - "5432"
+    networks:
+      - backend
+    volumes:
+      - database:/var/lib/postgresql/data:rw
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+  django:
+    restart: always
+    image: ${DOCKER_IMAGE}
+    ports:
+      - "8080"
+    expose:
+      - "8080"
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      - postgres
+    environment:
+      # Django
+      DJANGO_PROJECT_NAME: ${PROJECT_NAME}
+      DJANGO_SECRET_KEY:
+      DJANGO_SETTINGS_MODULE:
+      DJANGO_MEDIA_URL:
+      DJANGO_HONEYPOT_FIELD_NAME:
+      GOOGLE_ANALYTICS_PROPERTY_ID:
+      # DB
+      DJANGO_DB_NAME: ${DB_NAME}
+      DJANGO_DB_USER: ${DB_USER}
+      DJANGO_DB_PASSWORD: ${DB_PASSWORD}
+      DJANGO_DB_HOST: ${DB_HOST}
+      DJANGO_DB_PORT: ${DB_PORT}
+      # Email
+      DJANGO_EMAIL_HOST:
+      DJANGO_EMAIL_PORT:
+      DJANGO_EMAIL_HOST_USER:
+      DJANGO_EMAIL_HOST_PASSWORD:
+      # AWS
+      DJANGO_AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      DJANGO_AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      DJANGO_AWS_S3_HOST: ${AWS_S3_HOST}
+      DJANGO_AWS_STORAGE_BUCKET_NAME: ${AWS_S3_BUCKET}
+
+volumes:
+  database: {}
+
+networks:
+  backend:
+  frontend:
+    external:
+      name: autoproxy

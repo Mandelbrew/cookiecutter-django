@@ -1,10 +1,16 @@
-#{{cookiecutter.project_name}}
+# {{cookiecutter.project_name}}
 
 By *{{cookiecutter.project_author}}*
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
-###{{cookiecutter.project_description}}
+### A short description of {{cookiecutter.project_name}}.
+
+# Requirements
+* virtualenv
+* npm
+* fswatch
+* unison
 
 ##Basic Commands
 

@@ -1,0 +1,14 @@
+html {
+  overflow: auto;
+}
+
+body {
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+svg {
+  width: 100%; // Prevents oversizing
+}

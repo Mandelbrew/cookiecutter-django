@@ -1,0 +1,60 @@
+//region Padding, Margin & Alignment
+//----------------------------------------------------
+
+@for $i from 1 through 4 {
+  .miny-#{$i * 50}px {
+    min-height: ($i * 50 / 16) * 1rem;
+  }
+}
+
+@for $i from 1 through 4 {
+  .minx-#{$i * 50}px {
+    min-width: ($i * 50 / 16) * 1rem;
+  }
+}
+
+//endregion
+
+//region Colors
+//----------------------------------------------------
+
+$colors: () !default;
+$colors-bs: () !default;
+
+@each $key, $value in ($colors) {
+
+  .text-#{$key} {
+    color: $value !important;
+  }
+
+  .bg-#{$key} {
+    background-color: $value !important;
+  }
+
+  .svg-p-#{$key} {
+    svg * {
+      fill: $value !important;
+    }
+  }
+}
+
+@each $key, $value in ($colors-bs) {
+  .svg-p-#{$key} {
+    svg path {
+      fill: $value !important;
+    }
+  }
+}
+
+//endregion
+
+//region Fonts
+//----------------------------------------------------
+
+@for $i from 1 through 10 {
+  .fs-#{$i} {
+    font-size: #{$i}rem !important;
+  }
+}
+
+//endregion
