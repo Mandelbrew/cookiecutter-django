@@ -26,8 +26,6 @@ const providePlugin = new ProvidePlugin({ // Provide jquery to all
 const extractSassPlugin = new ExtractTextPlugin({filename: '[name].css'});
 const uglifyJSPlugin = new UglifyJSPlugin({compress: true});
 const vendorChunkPlugin = new CommonsChunkPlugin("application");
-const copyImgPlugin = new CopyWebpackPlugin([{from: 'assets/img', to: 'img'}]);
-const copyFontsPlugin = new CopyWebpackPlugin([{from: 'assets/fonts', to: 'fonts'}]);
 //endregion
 
 module.exports = {
@@ -37,7 +35,7 @@ module.exports = {
         'stylesheet': './assets/css/main.scss',
     },
     output: {
-        path: path.resolve('./application/static'),
+        path: path.resolve(process.env.WEBPACK_OUTPUT),
         filename: '[name].js',
     },
     resolve: {
@@ -50,8 +48,6 @@ module.exports = {
         extractSassPlugin,
         uglifyJSPlugin,
         vendorChunkPlugin,
-        copyFontsPlugin,
-        copyImgPlugin
     ],
     module: {
         rules: [

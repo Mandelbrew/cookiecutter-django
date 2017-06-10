@@ -24,7 +24,7 @@ COMMON_SECRETS = {
     "PROJECT_SLUG": "{{ cookiecutter.project_slug }}",
 
     # Webpack
-    "WEBPACK_OUTPUT": "./application/static",
+    "WEBPACK_OUTPUT": "./application/static/assets",
 
     # Django
     "DJANGO_EMAIL_HOST": "smtp.{{ cookiecutter.project_domain }}",
