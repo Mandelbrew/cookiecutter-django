@@ -982,7 +982,7 @@ $hinge-translate: 700px !default;
 
 $use-all: false !default; // all animations status
 $use-fade: $use-all !default; // all fades
-$use-bounces: $use-all !default; // all bounces
+$use-bounce: $use-all !default; // all bounces
 $use-rotate: $use-all !default; // all rotates
 $use-slide: $use-all !default; // all slide animations
 $use-flipers: $use-all !default; // all flip animations
@@ -992,7 +992,7 @@ $use-special: $use-all !default; // all special animations
 $use-zoom: $use-all !default; // all zoom animations
 // Fade Enter
 $use-fade-in: $use-fade !default;
-$use-fadeIn: true !default;
+$use-fadeIn: $use-fade-in !default;
 $use-fadeInUp: $use-fade-in !default;
 $use-fadeInUpBig: $use-fade-in !default;
 $use-fadeInDown: $use-fade-in !default;
@@ -1015,15 +1015,15 @@ $use-fadeOutRight: $use-fade-out !default;
 $use-fadeOutRightBig: $use-fade-out !default;
 
 // Bounce Enter
-$use-bounce-in: $use-bounces !default;
-$use-bounceIn: true !default;
+$use-bounce-in: $use-bounce !default;
+$use-bounceIn: $use-bounce-in !default;
 $use-bounceInUp: $use-bounce-in !default;
 $use-bounceInDown: $use-bounce-in !default;
 $use-bounceInLeft: $use-bounce-in !default;
 $use-bounceInRight: $use-bounce-in !default;
 
 // Bounce Exit
-$use-bounce-out: $use-bounces !default;
+$use-bounce-out: $use-bounce !default;
 $use-bounceOut: $use-bounce-out !default;
 $use-bounceOutUp: $use-bounce-out !default;
 $use-bounceOutDown: $use-bounce-out !default;
@@ -1048,9 +1048,9 @@ $use-rotateOutDownRight: $use-rotate-out !default;
 
 // Slide Enter
 $use-slide-in: $use-slide !default;
-$use-slideIn: $use-slide !default;
-$use-slideInUp: true !default;
-$use-slideInDown: true !default;
+$use-slideIn: $use-slide-in !default;
+$use-slideInUp: $use-slide-in !default;
+$use-slideInDown: $use-slide-in !default;
 $use-slideInLeft: $use-slide-in !default;
 $use-slideInRight: $use-slide-in !default;
 
@@ -1075,8 +1075,8 @@ $use-lightSpeedOut: $use-light-speed !default;
 
 // Attention Seekers
 $use-bounce: $use-attention-seekers !default;
-$use-flash: true !default;
-$use-pulse: true !default;
+$use-flash: $use-attention-seekers !default;
+$use-pulse: $use-attention-seekers !default;
 $use-wiggle: $use-attention-seekers !default;
 $use-swing: $use-attention-seekers !default;
 $use-shake: $use-attention-seekers !default;
@@ -1106,89 +1106,9 @@ $use-zoomOutUp: $use-zoom-out !default;
 
 //endregion
 
-//region magnific-popup Variables
-// --------------------------
-
-////////////////////////
-//      Settings      //
-////////////////////////
-
-// overlay
-$mfp-overlay-color: #0b0b0b !default; // Color of overlay screen
-$mfp-overlay-opacity: 0.8 !default; // Opacity of overlay screen
-$mfp-shadow: 0 0 8px rgba(0, 0, 0, 0.6) !default; // Shadow on image or iframe
-
-// spacing
-$mfp-popup-padding-left: 8px !default; // Padding from left and from right side
-$mfp-popup-padding-left-mobile: 6px !default; // Same as above, but is applied when width of window is less than 800px
-
-$mfp-z-index-base: 1040 !default; // Base z-index of popup
-
-// controls
-$mfp-include-arrows: true !default; // Include styles for nav arrows
-$mfp-controls-opacity: 0.65 !default; // Opacity of controls
-$mfp-controls-color: #FFF !default; // Color of controls
-$mfp-controls-border-color: #3F3F3F !default; // Border color of controls
-$mfp-inner-close-icon-color: #333 !default; // Color of close button when inside
-$mfp-controls-text-color: #CCC !default; // Color of preloader and "1 of X" indicator
-$mfp-controls-text-color-hover: #FFF !default; // Hover color of preloader and "1 of X" indicator
-
-// Iframe-type options
-$mfp-include-iframe-type: true !default; // Enable Iframe-type popups
-$mfp-iframe-padding-top: 40px !default; // Iframe padding top
-$mfp-iframe-background: #000 !default; // Background color of iframes
-$mfp-iframe-max-width: 900px !default; // Maximum width of iframes
-$mfp-iframe-ratio: 9/16 !default; // Ratio of iframe (9/16 = widescreen, 3/4 = standard, etc.)
-
-// Image-type options
-$mfp-include-image-type: true !default; // Enable Image-type popups
-$mfp-image-background: #444 !default;
-$mfp-image-padding-top: 40px !default; // Image padding top
-$mfp-image-padding-bottom: 40px !default; // Image padding bottom
-$mfp-include-mobile-layout-for-image: true !default; // Removes paddings from top and bottom
-
-// Image caption options
-$mfp-caption-title-color: #F3F3F3 !default; // Caption title color
-$mfp-caption-subtitle-color: #BDBDBD !default; // Caption subtitle color
-
-// A11y
-$mfp-use-visuallyhidden: false !default; // Hide content from browsers, but make it available for screen readers
-
-//endregion
-
+//
 //region mandelbrew Variables
-
-// Color
-// Generates bg-* and text-* utility classes
-$colors: (
-        white: $white,
-        black: $black,
-        red: $red,
-        orange: $orange,
-        yellow: $yellow,
-        green: $green,
-        blue: $blue,
-        blue-dark: $blue-dark,
-        blue-darker: $blue-darker,
-        teal: $teal,
-        pink: $pink,
-        purple: $purple,
-        gray-dark: $gray-dark,
-        gray: $gray,
-        gray-light: $gray-light,
-        gray-lighter: $gray-lighter,
-        gray-lightest: $gray-lightest,
-        brand-inverse: $brand-inverse,
-);
-
-$colors-bs: (
-        brand-primary:$brand-primary,
-        brand-success:$brand-success,
-        brand-info:$brand-info,
-        brand-warning:$brand-warning,
-        brand-danger:$brand-danger,
-        brand-inverse:$brand-inverse,
-);
+// --------------------------
 
 // Expand Spacers
 // 10px - 100px spacers
@@ -1216,5 +1136,23 @@ $colors-bs: (
   );
   $spacers: map-merge($spacers, $new);
 }
+
+// Sizes
+// Generates w-*, h-*, minh-*, minw-*, maxh-* and maxw-*
+$mb-sizes: (
+  //1: (1 * 50 / 16) * 1rem,
+);
+
+// Color
+// Generates bg-* and text-* utility classes
+$mb-colors: (
+  //brand-inverse: $brand-inverse,
+);
+
+// Fonts
+// Generates fs-* utility classes
+$mb-font-sizes: (
+  //1: 1rem,
+);
 
 //endregion

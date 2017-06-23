@@ -1,15 +1,34 @@
 //region Padding, Margin & Alignment
 //----------------------------------------------------
 
-@for $i from 1 through 4 {
-  .miny-#{$i * 50}px {
-    min-height: ($i * 50 / 16) * 1rem;
+// For bootstrap's $sizes
+@each $prop, $abbrev in (width:w, height:h) {
+  @each $key, $value in ($sizes) {
+
+    .min#{$abbrev}-#{$key} {
+      min-#{$prop}: $value !important;
+    }
+
+    .max#{$abbrev}-#{$key} {
+      max-#{$prop}: $value !important;
+    }
   }
 }
 
-@for $i from 1 through 4 {
-  .minx-#{$i * 50}px {
-    min-width: ($i * 50 / 16) * 1rem;
+// For $mb-sizes
+@each $prop, $abbrev in (width:w, height:h) {
+  @each $key, $value in ($mb-sizes) {
+    .#{$abbrev}-#{$key} {
+      #{$prop}: $value !important;
+    }
+
+    .min#{$abbrev}-#{$key} {
+      min-#{$prop}: $value !important;
+    }
+
+    .max#{$abbrev}-#{$key} {
+      max-#{$prop}: $value !important;
+    }
   }
 }
 
@@ -18,32 +37,10 @@
 //region Colors
 //----------------------------------------------------
 
-$colors: () !default;
-$colors-bs: () !default;
+@each $key, $value in ($mb-colors) {
+  @include text-emphasis-variant('.#{$key}', $value);
 
-@each $key, $value in ($colors) {
-
-  .text-#{$key} {
-    color: $value !important;
-  }
-
-  .bg-#{$key} {
-    background-color: $value !important;
-  }
-
-  .svg-p-#{$key} {
-    svg * {
-      fill: $value !important;
-    }
-  }
-}
-
-@each $key, $value in ($colors-bs) {
-  .svg-p-#{$key} {
-    svg path {
-      fill: $value !important;
-    }
-  }
+  @include bg-variant('.#{$key}', $value);
 }
 
 //endregion
@@ -51,9 +48,9 @@ $colors-bs: () !default;
 //region Fonts
 //----------------------------------------------------
 
-@for $i from 1 through 10 {
-  .fs-#{$i} {
-    font-size: #{$i}rem !important;
+@each $key, $value in ($mb-font-sizes) {
+  .fs-#{$key} {
+    font-size: $value !important;
   }
 }
 

@@ -1,0 +1,24 @@
+# Create a development docker machine
+docker-machine create \
+  --driver amazonec2 \
+  --amazonec2-tags 'Name,${PROJECT_NAME}' \
+  --amazonec2-instance-type t2.nano
+  --amazonec2-root-size 8 \
+  --amazonec2-region us-west-2 \
+  --amazonec2-security-group  default \
+  ${PROJECT_SLUG}
+
+# Create buckets in S3
+aws s3 mb s3://${AWS_S3_BUCKET} --profile default
+
+# Automatic reverse proxy
+docker run -d -p 80:80 -v /var/run/docker.sock:/tmp/docker.sock:ro jwilder/nginx-proxy
+
+# Backup databse container
+docker exec -t your-db-container pg_dumpall -c -U ${DB_USER} > ${PROJECT_SLUG}_`date +%d-%m-%Y"_"%H_%M_%S`.sql
+
+# Restore database container
+cat your_dump.sql | docker exec -i your-db-container psql -U ${DB_USER}
+
+# Start dev server
+docker run --name meowtwodevelopment_postgres -e POSTGRES_PASSWORD=${DB_PASSWORD} -e POSTGRES_USER=${DB_USER} -e POSTGRES_DB=${DB_NAME} -p '5432' -v "${DOCKER_PROJECT_NAME//-/}_database:/var/lib/postgresql/data:rw" --restart "always" -d postgres:9.6-alpine

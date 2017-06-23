@@ -1,34 +1,36 @@
-FROM       python:3.6
-MAINTAINER {{cookiecutter.project_author}} <{{cookiecutter.project_email}}>
+FROM       python:3.6-slim
+MAINTAINER Mandelbrew <contact@mandelbrew.com>
 
 # Prep env
-ENV        PYTHONUNBUFFERED       1
-ENV        DEBIAN_FRONTEND        noninteractive
-ENV        UWSGI_NUM_THREADS      15
-ENV        UWSGI_UID              uwsgi
-ENV        UWSGI_GID              uwsgi
+ENV        PYTHONUNBUFFERED=1 \
+           DEBIAN_FRONTEND=noninteractive
+
+WORKDIR	   /opt/docker
 
 # Operating System
-RUN        apt-get update -y \
+ADD        application/requirements.txt requirements.txt
+RUN        set -ex \
+           && build_deps='' \
+           && apt-get update -y \
            && apt-get install -y --no-install-recommends \
-             supervisor \
+                  ${build_deps} \
+                  cron \
+                  supervisor \
+           && pip3 install --no-cache-dir --upgrade \
+                  pip \
+                  setuptools \
+                  wheel \
+           && pip3 install --no-cache-dir -r requirements.txt \
+           && apt-get purge -y --auto-remove ${build_deps} \
            && apt-get autoremove -y \
            && apt-get clean -y \
-           && rm -rf /var/lib/apt/lists/* \
-           && pip3 install --no-cache-dir --upgrade pip setuptools wheel
-
-# Supervisor
-ADD        docker/supervisor-docker.conf /etc/supervisor/conf.d/
-ADD        docker/docker-cmd.sh /
+           && rm -rf /var/lib/apt/lists/*
 
 # Application
-ADD        ./application /opt/django
-RUN        pip3 install -r /opt/django/requirements.txt
-
-# UWSGI
-RUN        pip3 install uwsgi && useradd uwsgi -s /bin/false
+ADD        application .
+ADD        scripts/supervisor-docker.conf /etc/supervisor/conf.d/
+ADD        scripts/docker-cmd.sh /docker-cmd.sh
 
 EXPOSE     8080
-WORKDIR	   /opt/django
 
-CMD        ["supervisord", "-n"]
+CMD        ["supervisord"]

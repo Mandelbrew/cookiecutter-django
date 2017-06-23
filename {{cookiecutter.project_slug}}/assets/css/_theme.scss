@@ -1,0 +1,131 @@
+/*
+Project: milk
+Author: Mandelbrew
+*/
+
+/* Reset Font Size Base */
+
+html {
+  font-size: 14px;
+}
+
+h1 {
+  letter-spacing: 0.19rem;
+  text-transform: uppercase;
+  padding: 2rem 0;
+}
+
+h2 {
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  padding-top: 1.15rem;
+
+}
+
+h3, h4, h5, h6 {
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+  padding-top: 0.8rem;
+}
+
+p {
+  line-height: 1.65rem;
+  letter-spacing: 0.016rem;
+}
+
+th {
+  font-weight: 500;
+}
+
+.navbar-brand {
+  text-transform: uppercase;
+}
+
+.btn {
+  text-transform: uppercase;
+  letter-spacing: 0.091rem;
+  white-space: normal;
+}
+
+.btn-sm {
+  font-size: 0.75rem;
+  padding: 0.7rem 0.8rem;
+}
+
+.btn-lg {
+  padding: 1.4rem 3.3rem;
+}
+
+.masthead {
+  background-position: 50% 35%;
+}
+
+.display-1, .display-4 {
+  padding-bottom: 0.8rem;
+  text-transform: capitalize;
+}
+
+.form-control {
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-bottom: 1px solid $brand-info;
+  background-color: rgba(0, 0, 0, 0);
+
+}
+
+.navbar-inverse .form-control {
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-bottom: 1px solid $brand-success;
+  background-color: rgba(0, 0, 0, 0);
+
+}
+
+.form-control:focus {
+  border-color: $white;
+  border-bottom: 1px solid $brand-info;
+}
+
+.navbar {
+  padding: 3% 5% 1% 5%;
+}
+
+
+.navbar-toggleable-md .navbar-nav .nav-link {
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+
+.navbar-nav {
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: $brand-info;
+}
+
+.navbar-light .navbar-toggler {
+  border-color: rgba(0, 0, 0, 0);
+}
+
+.navbar-inverse .navbar-toggler {
+  border-color: rgba(0, 0, 0, 0);
+}
+
+.lead {
+  font-weight: 400;
+}
+
+.card--gallery {
+  margin: 0.4rem;
+  border-color: rgba(0, 0, 0, 0);
+}
+
+.card--border-sans {
+  border: 1px solid rgba(0, 0, 0, 0);
+  margin: 5px;
+}
+
+.card-header {
+  background-color: rgba(0, 0, 0, 0);
+}
