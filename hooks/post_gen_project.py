@@ -22,20 +22,25 @@ COMMON_SECRETS = {
     # Project
     "PROJECT_NAME": "{{ cookiecutter.project_name }}",
     "PROJECT_SLUG": "{{ cookiecutter.project_slug }}",
+    "PROJECT_STATIC_ROOT": "application/static/",
+
+    # Docker
+    "DOCKER_IMAGE": "{{ cookiecutter.project_slug }}",
 
     # Webpack
-    "WEBPACK_OUTPUT": "./application/static/assets",
+    "WEBPACK_OUTPUT_PATH": "./application/static/assets",
 
     # Django
+    "DJANGO_SETTINGS_MODULE": "config.settings",
     "DJANGO_EMAIL_HOST": "smtp.{{ cookiecutter.project_domain }}",
     "DJANGO_EMAIL_PORT": "587",
-    "DJANGO_EMAIL_HOST_USER": "{{ cookiecutter.project_name }}@{{ cookiecutter.project_domain }}",
+    "DJANGO_EMAIL_HOST_USER": "{{ cookiecutter.project_slug }}@{{ cookiecutter.project_domain }}",
     "DJANGO_DEFAULT_FROM_EMAIL": "contact@{{ cookiecutter.project_domain }}",
 
     # AWS
     "AWS_ACCESS_KEY_ID": "{{cookiecutter.project_slug|upper()}}_KEY_ID",
     "AWS_SECRET_ACCESS_KEY": "{{cookiecutter.project_slug|upper()}}_ACCESS_KEY",
-    "AWS_S3_HOST": "s3.amazonaws.com",
+    "AWS_S3_REGION": "us-west-2",
     "AWS_S3_BUCKET": "{{ cookiecutter.project_slug }}-assets",
 
     # DB
@@ -44,8 +49,6 @@ COMMON_SECRETS = {
     "DB_HOST": "postgres",
     "DB_PORT": "5432",
 
-    # Analytics
-    "GOOGLE_ANALYTICS_PROPERTY_ID": "UA-XXXXXX-2",
 }
 
 
@@ -86,27 +89,29 @@ def generate_secrets():
 
     dev_secrets = COMMON_SECRETS.copy()
     dev_secrets.update({
+        # Project
+        "PROJECT_DEBUG": "true",
+
         # Webpack
         "WEBPACK_CONFIG": "./assets/webpack.development.config.js",
 
         # Docker
-        "DOCKER_IMAGE": "{{ cookiecutter.project_name }}-development",
-        "DOCKER_COMPOSE": "./docker/docker-compose.development.yml",
+        "DOCKER_COMPOSE_CONFIG": "./docker/docker-compose.development.yml",
+        "DOCKER_PROJECT_NAME": "{{ cookiecutter.project_slug }}-development",
 
         # Django
-        "DJANGO_SETTINGS_MODULE": "config.settings.default",
         "DJANGO_EMAIL_HOST_PASSWORD": get_random_string(64, string.ascii_letters + string.digits),
         "DJANGO_SECRET_KEY": get_random_string(),
         "DJANGO_HONEYPOT_FIELD_NAME": get_random_string(16, string.ascii_letters + string.digits),
-        "DJANGO_MEDIA_URL": "/development/media/",
+        "DJANGO_DEFAULT_FILE_STORAGE": "config.s3_storages.MediaStorage",
+
+        # AWS
+        "AWS_S3_MEDIA_PATH": "/development/media/",
+        "AWS_S3_STATIC_PATH": "/development/static/",
+        "AWS_S3_BACKUPS_PATH": "'/development/backups/'",
 
         # DB
         "DB_PASSWORD": get_random_string(64, string.ascii_letters + string.digits),
-
-        # Unison
-        "UNISON_ROOT1": "./application/",
-        "UNISON_ROOT2": "socket://localhost:5000/",
-        "UNISON_IGNORE": "Name {.DS_Store,*.pyc}",
     })
 
     write_secrets(SECRETS_DIR, 'development', dev_secrets)
@@ -116,18 +121,23 @@ def generate_secrets():
     stg_secrets = COMMON_SECRETS.copy()
     stg_secrets.update({
         # Webpack
-        "WEBPACK_CONFIG": "./assets/webpack.staging.config.js",
+        "WEBPACK_CONFIG": "./assets/webpack.production.config.js",
 
         # Docker
-        "DOCKER_IMAGE": "{{ cookiecutter.project_name }}-staging",
-        "DOCKER_COMPOSE": "./docker/docker-compose.staging.yml",
+        "DOCKER_COMPOSE_CONFIG": "./docker/docker-compose.production.yml",
+        "DOCKER_PROJECT_NAME": "{{ cookiecutter.project_slug }}-staging",
 
         # Django
-        "DJANGO_SETTINGS_MODULE": "config.settings.default",
         "DJANGO_EMAIL_HOST_PASSWORD": get_random_string(64, string.ascii_letters + string.digits),
         "DJANGO_SECRET_KEY": get_random_string(),
         "DJANGO_HONEYPOT_FIELD_NAME": get_random_string(16, string.ascii_letters + string.digits),
-        "DJANGO_MEDIA_URL": "/staging/media/",
+        "DJANGO_STATICFILES_STORAGE": "config.s3_storages.StaticStorage",
+        "DJANGO_DEFAULT_FILE_STORAGE": "config.s3_storages.MediaStorage",
+
+        # AWS
+        "AWS_S3_MEDIA_PATH": "/staging/media/",
+        "AWS_S3_STATIC_PATH": "/staging/static/",
+        "AWS_S3_BACKUPS_PATH": "'/staging/backups/'",
 
         # DB
         "DB_PASSWORD": get_random_string(64, string.ascii_letters + string.digits),
@@ -139,16 +149,13 @@ def generate_secrets():
 
     prod_secrets = stg_secrets.copy()  # Notice this difference
     prod_secrets.update({
-        # Webpack
-        "WEBPACK_CONFIG": "./assets/webpack.production.config.js",
-
         # Docker
-        "DOCKER_IMAGE": "{{ cookiecutter.project_name }}-production",
-        "DOCKER_COMPOSE": "./docker/docker-compose.production.yml",
+        "DOCKER_PROJECT_NAME": "{{ cookiecutter.project_slug }}-production",
 
-        # Django
-        "DJANGO_SETTINGS_MODULE": "config.settings.production",
-        "DJANGO_MEDIA_URL": "/production/media/",
+        # AWS
+        "AWS_S3_MEDIA_PATH": "/production/media/",
+        "AWS_S3_STATIC_PATH": "/production/static/",
+        "AWS_S3_BACKUPS_PATH": "'/production/backups/'",
     })
 
     write_secrets(SECRETS_DIR, 'production', prod_secrets)
