@@ -27,7 +27,7 @@
     <!-- /head_meta -->
 
     <!-- favicon -->
-    {% include 'core/includes/favicon.html' %}
+    {% include 'core/favicon.html' %}
     <!-- /favicon -->
 
     <!-- head_css -->
@@ -38,8 +38,8 @@
 
     <!-- head_js -->
     {% block head_js %}
-        {% include 'core/includes/typekit.html' %}
-        {% include 'core/includes/shivs.html' %}
+        {% include 'core/typekit.html' %}
+        {% include 'core/shivs.html' %}
     {% endblock head_js %}
     <!-- /head_js -->
 
@@ -54,19 +54,25 @@
 {% analytical_body_top %}
 <!-- /analytical_body_top -->
 
-<!-- header -->
-{% block header %}{% include 'core/header.html' %}{% endblock header %}
-<!-- /header -->
+<!-- body -->
+{% block body %}
 
-<!-- content -->
-<main role="main">
-    {% block content %}{% endblock content %}
-</main>
-<!-- /content -->
+    <!-- header -->
+    {% block header %}{% include 'core/header.html' %}{% endblock header %}
+    <!-- /header -->
 
-<!-- footer -->
-{% block footer %}{% include 'core/footer.html' %}{% endblock footer %}
-<!-- /footer -->
+    <!-- content -->
+    <main role="main">
+        {% block content %}{% endblock content %}
+    </main>
+    <!-- /content -->
+
+    <!-- footer -->
+    {% block footer %}{% include 'core/footer.html' %}{% endblock footer %}
+    <!-- /footer -->
+
+{% endblock body %}
+<!-- /body -->
 
 <!-- wagtail -->
 {% block wagtail %}
