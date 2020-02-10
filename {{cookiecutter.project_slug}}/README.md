@@ -1,12 +1,20 @@
-# {{cookiecutter.project_name}} #
+# {{cookiecutter.project_name}}
+
+By *{{cookiecutter.project_author}}*
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
-### {{cookiecutter.project_description}} ###
+### A short description of {{cookiecutter.project_name}}.
 
-## Basic Commands ##
+# Requirements
+* virtualenv
+* npm
+* fswatch
+* unison
 
-### Setting Up Your Users ###
+##Basic Commands
+
+###Setting Up Your Users
 
 
 * To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.

@@ -1,0 +1,57 @@
+//region Padding, Margin & Alignment
+//----------------------------------------------------
+
+// For bootstrap's $sizes
+@each $prop, $abbrev in (width:w, height:h) {
+  @each $key, $value in ($sizes) {
+
+    .min#{$abbrev}-#{$key} {
+      min-#{$prop}: $value !important;
+    }
+
+    .max#{$abbrev}-#{$key} {
+      max-#{$prop}: $value !important;
+    }
+  }
+}
+
+// For $mb-sizes
+@each $prop, $abbrev in (width:w, height:h) {
+  @each $key, $value in ($mb-sizes) {
+    .#{$abbrev}-#{$key} {
+      #{$prop}: $value !important;
+    }
+
+    .min#{$abbrev}-#{$key} {
+      min-#{$prop}: $value !important;
+    }
+
+    .max#{$abbrev}-#{$key} {
+      max-#{$prop}: $value !important;
+    }
+  }
+}
+
+//endregion
+
+//region Colors
+//----------------------------------------------------
+
+@each $key, $value in ($mb-colors) {
+  @include text-emphasis-variant('.#{$key}', $value);
+
+  @include bg-variant('.#{$key}', $value);
+}
+
+//endregion
+
+//region Fonts
+//----------------------------------------------------
+
+@each $key, $value in ($mb-font-sizes) {
+  .fs-#{$key} {
+    font-size: $value !important;
+  }
+}
+
+//endregion

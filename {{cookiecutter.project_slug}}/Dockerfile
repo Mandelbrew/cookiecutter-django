@@ -1,34 +1,36 @@
-FROM       python
-MAINTAINER Carlos Avila <cavila@mandelbrew.com>
+FROM       python:3.6-slim
+MAINTAINER Mandelbrew <contact@mandelbrew.com>
 
-ENV        PYTHONUNBUFFERED       1
-ENV        DEBIAN_FRONTEND        noninteractive
+# Prep env
+ENV        PYTHONUNBUFFERED=1 \
+           DEBIAN_FRONTEND=noninteractive
 
-RUN        apt-get update -y \
-           && apt-get install -y \
-             logrotate \
+WORKDIR	   /opt/docker
+
+# Operating System
+ADD        application/requirements.txt requirements.txt
+RUN        set -ex \
+           && build_deps='' \
+           && apt-get update -y \
+           && apt-get install -y --no-install-recommends \
+                  ${build_deps} \
+                  cron \
+                  supervisor \
+           && pip3 install --no-cache-dir --upgrade \
+                  pip \
+                  setuptools \
+                  wheel \
+           && pip3 install --no-cache-dir -r requirements.txt \
+           && apt-get purge -y --auto-remove ${build_deps} \
            && apt-get autoremove -y \
            && apt-get clean -y \
-           && rm -rf /var/lib/apt/lists/* \
-           && pip install --no-cache-dir --upgrade pip setuptools wheel
+           && rm -rf /var/lib/apt/lists/*
+
+# Application
+ADD        application .
+ADD        scripts/supervisor-docker.conf /etc/supervisor/conf.d/
+ADD        scripts/docker-cmd.sh /docker-cmd.sh
 
 EXPOSE     8080
-WORKDIR    /opt/django
 
-ADD        ./application /opt/django
-RUN        pip install -r /opt/django/requirements.txt
-
-ENV        UWSGI_NUM_PROCESSES    1
-ENV        UWSGI_NUM_THREADS      15
-ENV        UWSGI_UID              uwsgi
-ENV        UWSGI_GID              uwsgi
-ENV        UWSGI_LOG_FILE         /var/log/uwsgi/uwsgi.log
-
-ADD        .docker/django/uwsgi.logrotate /etc/logrotate.d/uwsgi
-RUN        pip install uwsgi && \
-           useradd ${UWSGI_UID} -s /bin/false && \
-           mkdir -p $(dirname ${UWSGI_LOG_FILE}) && \
-           chown -R ${UWSGI_UID}:${UWSGI_GID} $(dirname ${UWSGI_LOG_FILE})
-
-ADD        .docker/django/uwsgi-start.sh /
-CMD        ["/uwsgi-start.sh"]
+CMD        ["supervisord"]
