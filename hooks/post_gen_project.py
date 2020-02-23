@@ -1,8 +1,7 @@
 """
 Does the following:
-1. Generates and saves random secret key
-2. Removes the taskapp if celery isn't going to be used
-3. Removes the .idea directory if PyCharm isn't going to be used
+- Generates and saves random secret key
+
 A portion of this code was adopted from Django's standard crypto functions and
 utilities, specifically:
     https://github.com/django/django/blob/master/django/utils/crypto.py
@@ -11,15 +10,14 @@ from __future__ import print_function
 import os
 import random
 import shutil
+import string
 
 import sys
 from cookiecutter.main import cookiecutter
 
 # Constants
-PROJECT_DIRECTORY = os.path.realpath(os.path.curdir)
-USER_HOME = os.path.expanduser('~')
-USER_SECRETS = os.path.join(USER_HOME, '.secrets')
-PROJECT_SECRETS = os.path.join(USER_SECRETS, '{{ cookiecutter.project_slug }}')
+PROJECT_DIR = os.path.realpath(os.path.curdir)
+SECRETS_DIR = os.path.join(PROJECT_DIR, 'secrets')
 
 
 def get_random_string(
@@ -34,85 +32,122 @@ def get_random_string(
     return ''.join(random.SystemRandom().choice(allowed_chars) for i in range(length))
 
 
-def generate_secrets():
-    if os.path.exists(PROJECT_SECRETS):
-        print('ERROR: {0} already exists. Refusing to overwrite.'.format(PROJECT_SECRETS))
-        sys.exit(1)
+def write_secrets(path, name, secrets):
+    env_f = os.path.join(path, '{0}.env'.format(name))
+    exp_f = os.path.join(path, '{0}.export'.format(name))
+
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    if os.path.exists(env_f):
+        print('ERROR: {0} already exists. Refusing to overwrite.'.format(env_f))
     else:
-        os.makedirs(PROJECT_SECRETS)
+        with open(env_f, 'w') as f:
+            f.write("".join(["{0}={1}\n".format(x, secrets[x]) for x in sorted(secrets)]))
 
-    base_secrets = [
+    if os.path.exists(exp_f):
+        print('ERROR: {0} already exists. Refusing to overwrite.'.format(exp_f))
+    else:
+        with open(exp_f, 'w') as f:
+            f.write("".join(["export {0}='{1}'\n".format(x, secrets[x]) for x in sorted(secrets)]))
+
+
+def generate_secrets():
+    # Development
+
+    common_secrets = {
         # Project
-        "PROJECT_NAME='{{ cookiecutter.project_name }}'",
-        "PROJECT_SLUG='{{ cookiecutter.project_slug }}'",
+        "PROJECT_NAME": "{{ cookiecutter.project_name }}",
+        "PROJECT_SLUG": "{{ cookiecutter.project_slug }}",
+        "PROJECT_STATIC_ROOT": "application/static/",
 
-        # PostgreSQL
-        "POSTGRES_DB='{{ cookiecutter.db_name }}'",
-        "POSTGRES_USER='{{ cookiecutter.db_user }}'",
+        # Docker
+        "DOCKER_IMAGE": "{{ cookiecutter.project_slug }}",
+        "DOCKER_PROJECT_NAME": "{{ cookiecutter.project_slug }}-development",
+        "DOCKER_COMPOSE_CONFIG": "./docker/docker-compose.development.yml",
+
+        # Webpack
+        "WEBPACK_CONFIG": "./assets/webpack.development.config.js",
+        "WEBPACK_OUTPUT_PATH": "./application/static/assets",
 
         # Django
-        "DJANGO_DB_HOST='{{ cookiecutter.db_host }}'",
-        "DJANGO_DB_PORT='{{ cookiecutter.db_port }}'",
-        "DJANGO_DB_NAME='{{ cookiecutter.db_name }}'",
-        "DJANGO_DB_USER='{{ cookiecutter.db_user }}'",
-        "DJANGO_EMAIL_HOST='{{ cookiecutter.email_host }}'",
-        "DJANGO_EMAIL_PORT='{{ cookiecutter.email_port }}'",
-        "DJANGO_EMAIL_HOST_USER='{{ cookiecutter.email_user }}'",
-        "DJANGO_EMAIL_HOST_PASSWORD='{{ cookiecutter.email_password }}'",
-        "DJANGO_DEFAULT_FROM_EMAIL='{{ cookiecutter.django_default_from_email }}'",
-        "DJANGO_ALLOWED_HOSTS='{{ cookiecutter.django_allowed_hosts }}'",
+        "DJANGO_SECRET_KEY": get_random_string(),
+        "DJANGO_SETTINGS_MODULE": "config.settings",
+        "DJANGO_STATICFILES_STORAGE": "config.s3_storages.StaticStorage",
+        "DJANGO_DEFAULT_FILE_STORAGE": "config.s3_storages.MediaStorage",
+        "DJANGO_EMAIL_HOST": "smtp.{{ cookiecutter.project_domain }}",
+        "DJANGO_EMAIL_PORT": "587",
+        "DJANGO_EMAIL_HOST_USER": "{{ cookiecutter.project_slug }}@{{ cookiecutter.project_domain }}",
+        "DJANGO_EMAIL_HOST_PASSWORD": get_random_string(64, string.ascii_letters + string.digits),
+        "DJANGO_DEFAULT_FROM_EMAIL": "contact@{{ cookiecutter.project_domain }}",
+        "DJANGO_HONEYPOT_FIELD_NAME": get_random_string(16, string.ascii_letters + string.digits),
 
         # AWS
-        "AWS_ACCESS_KEY_ID='{{ cookiecutter.aws_access_key_id }}'",
-        "AWS_SECRET_ACCESS_KEY='{{ cookiecutter.aws_secret_access_key }}'",
-        "AWS_STORAGE_BUCKET_NAME='{{ cookiecutter.aws_storage_bucket_name }}'",
+        "AWS_ACCESS_KEY_ID": "{{cookiecutter.project_slug|upper()}}_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY": "{{cookiecutter.project_slug|upper()}}_ACCESS_KEY",
+        "AWS_S3_REGION": "us-west-2",
+        "AWS_S3_BUCKET": "{{ cookiecutter.project_slug }}-assets",
+        "AWS_S3_MEDIA_PATH": "/development/media/",
+        "AWS_S3_STATIC_PATH": "/development/static/",
+        "AWS_S3_BACKUPS_PATH": "'/development/backups/'",
 
-        # uWSGI
-        "UWSGI_NUM_PROCESSES='1'",
-        "UWSGI_NUM_THREADS='15'",
-    ]
+        # DB
+        "DB_NAME": "{{ cookiecutter.project_slug }}",
+        "DB_USER": "{{ cookiecutter.project_slug }}",
+        "DB_PASSWORD": get_random_string(64, string.ascii_letters + string.digits),
+        "DB_HOST": "postgres",
+        "DB_PORT": "5432",
+    }
 
-    db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
-    development = base_secrets + [
-        "DJANGO_ENVIRONMENT='docker_development'",
-        "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
-        "DJANGO_DB_PASSWORD='{0}'".format(db_password),
-        "POSTGRES_PASSWORD='{0}'".format(db_password),
-    ]
+    dev_secrets = common_secrets.copy()
+    dev_secrets.update({
+        # Project
+        "PROJECT_DEBUG": "true",
+    })
 
-    # with open(os.path.join(PROJECT_SECRETS, 'development.env'), 'w') as f:
-    #     f.write("".join(["{0}\n".format(x) for x in development]))
+    write_secrets(SECRETS_DIR, 'development', dev_secrets)
 
-    with open(os.path.join(PROJECT_SECRETS, 'development.sh'), 'w') as f:
-        f.write("".join(["export {0}\n".format(x) for x in development]))
+    # Staging
 
-    db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
-    staging = base_secrets + [
-        "DJANGO_ENVIRONMENT='docker_staging'",
-        "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
-        "DJANGO_DB_PASSWORD='{0}'".format(db_password),
-        "POSTGRES_PASSWORD='{0}'".format(db_password),
-    ]
+    stg_secrets = common_secrets.copy()
+    stg_secrets.update({
+        # Webpack
+        "WEBPACK_CONFIG": "./assets/webpack.production.config.js",
 
-    # with open(os.path.join(PROJECT_SECRETS, 'staging.env'), 'w') as f:
-    #     f.write("".join(["{0}\n".format(x) for x in staging]))
+        # Docker
+        "DOCKER_PROJECT_NAME": "{{ cookiecutter.project_slug }}-staging",
+        "DOCKER_COMPOSE_CONFIG": "./docker/docker-compose.production.yml",
 
-    with open(os.path.join(PROJECT_SECRETS, 'staging.sh'), 'w') as f:
-        f.write("".join(["export {0}\n".format(x) for x in staging]))
+        # Django
+        "DJANGO_EMAIL_HOST_PASSWORD": get_random_string(64, string.ascii_letters + string.digits),
+        "DJANGO_SECRET_KEY": get_random_string(),
+        "DJANGO_HONEYPOT_FIELD_NAME": get_random_string(16, string.ascii_letters + string.digits),
 
-    db_password = get_random_string(64, 'abcdefghijklmnopqrstuvwxyz0123456789')
-    production = base_secrets + [
-        "DJANGO_ENVIRONMENT='docker_production'",
-        "DJANGO_SECRET_KEY='{0}'".format(get_random_string()),
-        "DJANGO_DB_PASSWORD='{0}'".format(db_password),
-        "POSTGRES_PASSWORD='{0}'".format(db_password),
-    ]
+        # AWS
+        "AWS_S3_MEDIA_PATH": "/staging/media/",
+        "AWS_S3_STATIC_PATH": "/staging/static/",
+        "AWS_S3_BACKUPS_PATH": "'/staging/backups/'",
 
-    # with open(os.path.join(PROJECT_SECRETS, 'production.env'), 'w') as f:
-    #     f.write("".join(["{0}\n".format(x) for x in production]))
+        # DB
+        "DB_PASSWORD": get_random_string(64, string.ascii_letters + string.digits),
+    })
 
-    with open(os.path.join(PROJECT_SECRETS, 'production.sh'), 'w') as f:
-        f.write("".join(["export {0}\n".format(x) for x in production]))
+    write_secrets(SECRETS_DIR, 'staging', stg_secrets)
+
+    # Production
+
+    prod_secrets = stg_secrets.copy()  # Notice this difference
+    prod_secrets.update({
+        # Docker
+        "DOCKER_PROJECT_NAME": "{{ cookiecutter.project_slug }}-production",
+
+        # AWS
+        "AWS_S3_MEDIA_PATH": "/production/media/",
+        "AWS_S3_STATIC_PATH": "/production/static/",
+        "AWS_S3_BACKUPS_PATH": "'/production/backups/'",
+    })
+
+    write_secrets(SECRETS_DIR, 'production', prod_secrets)
 
 
 generate_secrets()

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+{% load wagtailuserbar %}
+{% load wagtailcore_tags %}
+{% load analytical %}
+{% load meta %}
+{% load i18n %}
+
+<html {% meta_namespaces_gplus %} class="no-js" lang="{{ LANGUAGE_CODE|default:"en" }}">
+
+<head {% meta_namespaces %} >
+    <!-- These 3 meta tags *must* come first in the head -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Any other head content must come *after* these tags -->
+
+    <!-- analytical_head_top -->
+    {% analytical_head_top %}
+    <!-- /analytical_head_top -->
+
+    <!-- head_meta -->
+    {% block head_meta %}
+        {% include 'meta/meta.html' %}
+    {% endblock head_meta %}
+    <!-- /head_meta -->
+
+    <!-- favicon -->
+    {% include 'core/favicon.html' %}
+    <!-- /favicon -->
+
+    <!-- head_css -->
+    {% block head_css %}
+        <link rel="stylesheet" href="{% static 'assets/stylesheet.css' %}">
+    {% endblock head_css %}
+    <!-- /head_css  -->
+
+    <!-- head_js -->
+    {% block head_js %}
+        {% include 'core/typekit.html' %}
+        {% include 'core/shivs.html' %}
+    {% endblock head_js %}
+    <!-- /head_js -->
+
+    <!-- analytical_head_bottom -->
+    {% analytical_head_bottom %}
+    <!-- /analytical_head_bottom -->
+
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+<!-- analytical_body_top -->
+{% analytical_body_top %}
+<!-- /analytical_body_top -->
+
+<!-- body -->
+{% block body %}
+
+    <!-- header -->
+    {% block header %}{% include 'core/header.html' %}{% endblock header %}
+    <!-- /header -->
+
+    <!-- content -->
+    <main role="main">
+        {% block content %}{% endblock content %}
+    </main>
+    <!-- /content -->
+
+    <!-- footer -->
+    {% block footer %}{% include 'core/footer.html' %}{% endblock footer %}
+    <!-- /footer -->
+
+{% endblock body %}
+<!-- /body -->
+
+<!-- wagtail -->
+{% block wagtail %}
+    {% wagtailuserbar 'bottom-left' %}
+{% endblock %}
+<!-- /wagtail -->
+
+<!-- body_js -->
+{% block body_js %}
+    <script async src="{% static 'assets/application.js' %}"></script>
+{% endblock body_js %}
+<!-- /body_js -->
+
+<!-- analytical_body_bottom -->
+{% analytical_body_bottom %}
+<!-- /analytical_body_bottom -->
+</body>
+
+</html>
